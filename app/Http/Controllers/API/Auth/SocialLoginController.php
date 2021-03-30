@@ -17,5 +17,6 @@ class SocialLoginController extends Controller
     {
         $serviceUser = Socialite::driver($service)->stateless()->user();
         dd($serviceUser);
+        //perubahan
     }
 }

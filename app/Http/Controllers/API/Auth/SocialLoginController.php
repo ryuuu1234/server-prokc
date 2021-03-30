@@ -16,7 +16,7 @@ class SocialLoginController extends Controller
     public function __construct(JWTAuth $auth)
     {
         $this->auth = $auth;
-        $this->middleware(['social', 'web']);
+        //$this->middleware(['social', 'web']);
     }
     public function redirect($service)
     {
@@ -55,7 +55,9 @@ class SocialLoginController extends Controller
             ]);
         }
 
-        dd($user);
+        //dd($user);
+        // return redirect(env('CLIENT_BASE_URL') . '/auth/social-callback?token=' . $this->auth->fromUser($user) . '&origin=' . ($newUser ? 'register' : 'login'));
+        return redirect(env('CLIENT_BASE_URL') . '/auth/social-callback?token=' . $this->auth::fromUser($user) );
     }
 
     public function needsToCreateSocial(User $user, $service)

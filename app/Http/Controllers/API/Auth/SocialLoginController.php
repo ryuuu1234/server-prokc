@@ -44,7 +44,7 @@ class SocialLoginController extends Controller
                 'name' => $serviceUser->getName(),
                 'email' => $email,
                 'password' => '',
-                'avatar' => $serviceUser->getAvatar(),
+                'avatar' => $serviceUser->avatar,
             ]);
         }
 

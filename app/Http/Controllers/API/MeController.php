@@ -26,6 +26,7 @@ class MeController extends Controller
 
     public function upload_image(Request $request, User $user){
 
+        
         $old_path = $user->avatar;
         Storage::delete('public/'.$old_path);
         if($request->hasFile('image')) {

@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -12,6 +13,10 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('/linkstorage', function () {
+    Artisan::call('storage:link'); // this will do the command line job
+});
 
 Route::get('/', function () {
     return view('welcome');

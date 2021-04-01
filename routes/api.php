@@ -29,10 +29,12 @@ Route::prefix('/auth')->group(function () {
 
 Route::group(['middleware' => 'jwt.auth'], function() {
     Route::get('/me', [MeController::class, 'index']);
-    Route::get('/auth/logout', [MeController::class, 'logout']);
-
-    // profile
     Route::put('/me/upload_image/{user}', [MeController::class, 'upload_image']);
+
+
+
+    
+    Route::get('/auth/logout', [MeController::class, 'logout']);
 });
 
 // Route::group(['prefix'=> '/auth', ['middleware' => 'throttle:20,5']], function() {

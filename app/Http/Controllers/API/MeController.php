@@ -28,11 +28,13 @@ class MeController extends Controller
     {
         
         $notelp = $request->notelp;
-
-        return response()->json([
-            'success'=>true,
-            'data'=>$request->all()
-        ]);
+        if ($user) {
+            return response()->json([
+                'success'=>true,
+                'data'=>$request->all()
+            ]);
+        }
+       
     }
 
     public function upload_image(Request $request, User $user){

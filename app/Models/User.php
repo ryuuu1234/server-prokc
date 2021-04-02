@@ -27,6 +27,8 @@ class User extends Authenticatable implements JWTSubject
         'alamat',
         'provinsi',
         'kota',
+        'status',
+        'bidder',
     ];
 
     /**

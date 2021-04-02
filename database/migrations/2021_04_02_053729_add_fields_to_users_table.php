@@ -19,6 +19,8 @@ class AddFieldsToUsersTable extends Migration
             $table->string('alamat')->nullable()->after('nowhatsapp');
             $table->string('provinsi')->nullable()->after('alamat');
             $table->string('kota')->nullable()->after('provinsi');
+            $table->tinyInteger('status')->default(1)->after('kota');
+            $table->tinyInteger('bidder')->default(0)->after('status');
         });
     }
 
@@ -35,6 +37,8 @@ class AddFieldsToUsersTable extends Migration
             $table->dropColumn('alamat');
             $table->dropColumn('provinsi');
             $table->dropColumn('kota');
+            $table->dropColumn('status');
+            $table->dropColumn('bidder');
         });
     }
 }

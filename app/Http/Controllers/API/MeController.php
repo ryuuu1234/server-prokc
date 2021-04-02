@@ -25,14 +25,26 @@ class MeController extends Controller
     }
 
     public function update(Request $request, User $user)
-    {
-        
-        $notelp = $request->notelp;
+    { 
         if ($user) {
+            $user->notelp = $request->notelp;
+            $user->nowhatsapp = $request->nowhatsapp;
+            $user->alamat = $request->alamat;
+            $user->provinsi = $request->provinsi;
+            $user->kota = $request->kota;
+            if ($user->save()) {
+                return response()->json($user,200);
+            } else {
+                return response()->json([
+                    'status'       => 'Error on Updated',
+                    'status_code'   => 500
+                ],500);
+            } 
+        } else {
             return response()->json([
-                'success'=>true,
-                'data'=>$request->all()
-            ]);
+                'status'       => 'User tidak ditemukan',
+                'status_code'   => 500
+            ],500);
         }
        
     }

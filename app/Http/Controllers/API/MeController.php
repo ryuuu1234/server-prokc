@@ -24,6 +24,21 @@ class MeController extends Controller
         ]);
     }
 
+    public function edit($id)
+    {
+        $user = User::find($id);
+        if ($user) {
+            return response()->json([
+                'status' => 'success',
+                'data' =>$user
+            ], 200);
+        } else {
+            return response()->json([
+                'status' => 'failed'
+            ], 500);
+        }
+    }
+
     public function upload_image(Request $request, User $user){
 
         

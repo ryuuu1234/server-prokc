@@ -29,6 +29,7 @@ Route::prefix('/auth')->group(function () {
 
 Route::group(['middleware' => 'jwt.auth'], function() {
     Route::get('/me', [MeController::class, 'index']);
+    Route::get('/me/edit/{user}/edit', [MeController::class, 'edit']);
     Route::put('/me/upload_image/{user}', [MeController::class, 'upload_image']);
 
 

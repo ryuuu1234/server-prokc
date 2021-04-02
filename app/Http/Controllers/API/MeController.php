@@ -24,9 +24,9 @@ class MeController extends Controller
         ]);
     }
 
-    public function update(Request $request)
+    public function update(Request $request, User $user)
     {
-        $user = $request->user();
+        
         $notelp = $request->notelp;
 
         return response()->json([

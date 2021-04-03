@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\Auth\LoginController;
 use App\Http\Controllers\API\Auth\RegisterController;
 use App\Http\Controllers\API\Auth\SocialLoginController;
+use App\Http\Controllers\API\BankController;
 use App\Http\Controllers\API\MeController;
 use GuzzleHttp\Middleware;
 use Illuminate\Http\Request;
@@ -33,8 +34,16 @@ Route::group(['middleware' => 'jwt.auth'], function() {
     Route::put('/me/upload_image/{user}', [MeController::class, 'upload_image']);
 
 
+    // BankController
+    Route::get('/bank', [BankController::class, 'index']);
 
-    
+
+
+
+
+
+
+
     Route::get('/auth/logout', [MeController::class, 'logout']);
 });
 

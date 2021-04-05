@@ -5,6 +5,7 @@ use App\Http\Controllers\API\Auth\RegisterController;
 use App\Http\Controllers\API\Auth\SocialLoginController;
 use App\Http\Controllers\API\BankController;
 use App\Http\Controllers\API\MeController;
+use App\Http\Controllers\API\TransactionController;
 use GuzzleHttp\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -36,6 +37,13 @@ Route::group(['middleware' => 'jwt.auth'], function() {
 
     // BankController
     Route::get('/bank', [BankController::class, 'index']);
+
+
+
+    // Transactions
+    Route::post('/transaction/upload_image', [TransactionController::class, 'upload_image']);
+    Route::get('/transaction', [TransactionController::class, 'get_trans']);
+    Route::post('/transaction/konfirmasi', [TransactionController::class, 'konfirmasi']);
 
 
 

@@ -1,0 +1,105 @@
+<?php
+
+namespace App\Http\Controllers\API;
+
+use App\Http\Controllers\Controller;
+use App\Models\Lelang;
+// use App\Models\Bank;
+// use App\Models\Transaction;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+// use Illuminate\Support\Facades\Storage;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Str;
+
+class LelangController extends Controller
+{
+    protected $auth;
+
+    public function __construct(JWTAuth $auth)
+    {
+       $this->auth = $auth;
+    }
+    
+    public function add_data()
+    {       
+        $cek = Lelang::count();
+        $user_id = $this->auth::user()->id;
+        $id_lelang = $this->generateId($cek);
+
+        $save = Lelang::create([
+            'user_id'=>$user_id,
+            'id_lelang'=>$id_lelang,
+        ]);
+
+        if ($save) {
+            return response()->json($save,200);
+        } else {
+            return response()->json([
+                'message'       => 'Error',
+                'status_code'   => 500
+            ],500);
+        }
+
+    }
+
+    public function data_last()
+    {
+        $user_id = $this->auth::user()->id;
+        $data = Lelang::where('user_id', $user_id)->orderBy('id', 'DESC')->first();
+        return response()->json($data,200); 
+    }
+
+    public function data_by($lelang_id)
+    {
+        $get = Lelang::where('id_lelang', $lelang_id)->first();
+
+        return response()->json($get,200);
+    }
+
+    public function update(Request $request, $id_lelang)
+    {
+        $update = Lelang::where('id_lelang', $id_lelang)->update([
+            'judul' =>$request->judul,
+            'kategori' =>$request->kategori,
+            'berakhir' =>$request->berakhir,
+            'harga_pembuka' =>$request->harga_pembuka,
+            'kelipatan' =>$request->kelipatan,
+            'deskripsi' =>$request->deskripsi,
+        ]);
+
+        if ($update) {
+            return response()->json($update,200);
+        }
+    }
+
+    public function hapus_by($id_lelang)
+    {
+        $del = Lelang::where('id_lelang', $id_lelang)->delete();
+        if ($del) {
+            return response()->json(['success'=> 'true'],200);
+        } else {
+            return response()->json(['success'=> 'failed'],500);
+        }
+    }
+
+    public function generateId($cek)
+    {
+        $tgl = date('mdy');
+        $id_abal = $tgl.($cek + 1);
+        return $id_abal;
+    }
+
+    public function get_by_id()
+    {
+        $id = $this->auth::user()->id;
+        $get = Lelang::where('user_id', $id)->orderBy('id', 'DESC')->get();
+        if ($get) {
+            return response()->json(['success'=> 'true', 'data'=>$get],200);
+        } else {
+            return response()->json(['success'=> 'failed'],500);
+        }
+    }
+    
+}

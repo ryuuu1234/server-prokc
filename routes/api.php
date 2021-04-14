@@ -4,8 +4,10 @@ use App\Http\Controllers\API\Auth\LoginController;
 use App\Http\Controllers\API\Auth\RegisterController;
 use App\Http\Controllers\API\Auth\SocialLoginController;
 use App\Http\Controllers\API\BankController;
+use App\Http\Controllers\API\KategoriController;
 use App\Http\Controllers\API\MeController;
 use App\Http\Controllers\API\TransactionController;
+use App\Http\Controllers\API\LelangController;
 use GuzzleHttp\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -39,11 +41,24 @@ Route::group(['middleware' => 'jwt.auth'], function() {
     Route::get('/bank', [BankController::class, 'index']);
 
 
+    // KategoriController
+    Route::get('/kategori', [KategoriController::class, 'index']);
+
+
 
     // Transactions
     Route::post('/transaction/upload_image', [TransactionController::class, 'upload_image']);
     Route::get('/transaction', [TransactionController::class, 'get_trans']);
     Route::post('/transaction/konfirmasi', [TransactionController::class, 'konfirmasi']);
+
+
+    // lelang
+    Route::post('/lelang/add', [LelangController::class, 'add_data']);
+    Route::get('/lelang/last', [LelangController::class, 'data_last']);
+    Route::get('/lelang/by/{lelang}', [LelangController::class, 'data_by']);
+    Route::put('/lelang/update/{lelang}', [LelangController::class, 'update']);
+    Route::get('/lelang/hapus_by/{lelang}', [LelangController::class, 'hapus_by']);
+    Route::get('/lelang/all_by', [LelangController::class, 'get_by_id']);
 
 
 

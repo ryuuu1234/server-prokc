@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,9 +16,16 @@ use Illuminate\Support\Facades\Storage;
 |
 */
 
-Route::get('/linkstorage', function () {
-    Artisan::call('storage:link'); // this will do the command line job
+Route::get('/coba', function () {
+    // $coba = Str::random(10);
+    // $coba = Str::orderedUuid(10);
+    $coba = date('mdy');
+    echo $coba;
 });
+
+// Route::get('/linkstorage', function () {
+//     Artisan::call('storage:link'); // this will do the command line job
+// });
 
 Route::get('/', function () {
     return view('welcome');

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 // use Illuminate\Support\Facades\Storage;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Str;
 
 class TransactionController extends Controller
 {
@@ -39,8 +40,8 @@ class TransactionController extends Controller
                 'image'=>'required|image|mimes:jpeg,png,jpg'
             ]);
             $path = $request->file('image')->store('images', 'public');
-            // updateOrCreate
-            $save = Transaction::firstOrCreate([
+            // firstOrCreate
+            Transaction::firstOrCreate([
                 'user_id' => $user->id,
                 'jenis' => 'pembayaran_activasi'
             ]);
@@ -76,13 +77,19 @@ class TransactionController extends Controller
     }
 
     public function konfirmasi(Request $request)
-    {
+    {   
+        $request->validate([
+            'tanggal' => 'required',
+            'nominal' => 'required|numeric'
+        ]);
         $user = $this->auth::user()->id;
-        $transaction = Transaction::firstOrCreate(
-            ['user_id'=> $user, 'jenis' => 'pembayaran_activasi'],
-            [
+        $transaction = Transaction::updateOrCreate(['user_id'=> $user, 'jenis' => $request->jenis],
+            [   
+                'invoice'=> $this->invoice($request->jenis),
                 'bank_id'=>$request->bank_id,
                 'tanggal'=>$request->tanggal,
+                'nominal'=>$request->nominal,
+                'status'=>1, //menunggu validasi admin
             ]
         );
 
@@ -94,6 +101,21 @@ class TransactionController extends Controller
                 'status_code'   => 500
             ],500);
         }
+
+    }
+
+    public function invoice($jenis)
+    {   
+        $inv = '';
+        if ($jenis == 'pembayaran_activasi') {
+            $inv = 'ACT-';
+        }
+
+        $random = Str::random(10);
+
+        $invoice = $inv.$random;
+
+        return $invoice;
 
     }
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Lelang;
+use App\Models\MediaLelang;
 // use App\Models\Bank;
 // use App\Models\Transaction;
 use App\Models\User;
@@ -53,14 +54,15 @@ class LelangController extends Controller
 
     public function data_by($lelang_id)
     {
-        $get = Lelang::where('id_lelang', $lelang_id)->first();
+        $get = Lelang::find($lelang_id);
+        $get->load('media_lelang');
 
         return response()->json($get,200);
     }
 
     public function update(Request $request, $id_lelang)
     {
-        $update = Lelang::where('id_lelang', $id_lelang)->update([
+        $update = Lelang::where('id', $id_lelang)->update([
             'judul' =>$request->judul,
             'kategori' =>$request->kategori,
             'berakhir' =>$request->berakhir,
@@ -75,13 +77,19 @@ class LelangController extends Controller
     }
 
     public function hapus_by($id_lelang)
-    {
-        $del = Lelang::where('id_lelang', $id_lelang)->delete();
+    {   
+        $media = MediaLelang::where('lelang_id', $id_lelang)->get();
+        foreach ($media as $key) {
+            Storage::delete('public/'.$key->image);
+        }
+        MediaLelang::where('lelang_id', $id_lelang)->delete();
+        $del = Lelang::where('id', $id_lelang)->delete();
         if ($del) {
             return response()->json(['success'=> 'true'],200);
         } else {
             return response()->json(['success'=> 'failed'],500);
         }
+        
     }
 
     public function generateId($cek)
@@ -100,6 +108,33 @@ class LelangController extends Controller
         } else {
             return response()->json(['success'=> 'failed'],500);
         }
+    }
+
+    public function upload_image(Request $request){
+
+        
+        // $old_path = $user->avatar;
+        // Storage::delete('public/'.$old_path);
+        
+        if($request->hasFile('image')) {
+            $request->validate([
+                'image'=>'required|image|mimes:jpeg,png,jpg'
+            ]);
+            $path = $request->file('image')->store('images', 'public');
+
+            $media = MediaLelang::create([
+                'lelang_id'=>$request->lelang_id,
+                'image'=>$path,
+            ]);
+
+            if ($media) {
+                return response()->json(['success'=> 'true'],200);
+            } else {
+                return response()->json(['success'=> 'failed'],500);
+            }
+            
+        }
+
     }
     
 }

@@ -173,6 +173,10 @@ class LelangController extends Controller
             // ->with( ['detail_order_one.product:id,name', 'details_bubuk', 'details_bubuk.bubuk:id,nama'])
             ->orderBy('berakhir', 'ASC')
             ->get();
+        $lelang->load('media_lelang:id,lelang_id,image,status');
+        $lelang->load('video_lelang:id,lelang_id,video,status');
+        $lelang->load('user');
+        
         if ($lelang) {
             return response()->json(['success'=> 'true', 'data'=> $lelang],200);
         } else {

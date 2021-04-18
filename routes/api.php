@@ -36,7 +36,7 @@ Route::prefix('/auth')->group(function () {
 Route::group(['middleware' => 'jwt.auth'], function() {
     Route::get('/me', [MeController::class, 'index']);
     Route::put('/me/update/{user}', [MeController::class, 'update']);
-    Route::put('/me/upload_image/{user}', [MeController::class, 'upload_image']);
+    Route::post('/prokc/sw-token', [MeController::class, 'swToken']);
 
 
     // BankController

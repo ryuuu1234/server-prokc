@@ -5,8 +5,11 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Tymon\JWTAuth\Facades\JWTAuth;
+
+
 
 class MeController extends Controller
 {
@@ -73,6 +76,32 @@ class MeController extends Controller
         } 
         // return response()->json($request->all(),200);
 
+    }
+
+    public function swToken(Request $request){
+        
+        $user = User::find($request->id);
+        if($user->fcm_token != $request->token){
+            DB::beginTransaction();
+            try{
+                $save=User::where('id',$request->id)->update(['fcm_token'=>$request->token]);
+
+                DB::commit();
+                return response()->json(['status'=>'sukses'], 200);
+            }catch (\Exception $e){
+            DB::rollback();
+                return response()->json([
+                    'status'=>'failse',
+                    'message'=> $e->getMessage()
+                ],400);
+        }
+        }else{
+            return response()->json([
+                
+                'message'=>'no data need to update',
+            ],200);
+
+        }
     }
 
     public function logout()

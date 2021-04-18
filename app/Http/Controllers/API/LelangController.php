@@ -8,6 +8,7 @@ use App\Models\MediaLelang;
 // use App\Models\Bank;
 // use App\Models\Transaction;
 use App\Models\User;
+use App\Models\VideoLelang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 // use Illuminate\Support\Facades\Storage;
@@ -80,11 +81,21 @@ class LelangController extends Controller
 
     public function hapus_by($id_lelang)
     {   
+        // hapuus foto
         $media = MediaLelang::where('lelang_id', $id_lelang)->get();
         foreach ($media as $key) {
             Storage::delete('public/'.$key->image);
         }
         MediaLelang::where('lelang_id', $id_lelang)->delete();
+
+        // hapus video
+        $video = VideoLelang::where('lelang_id', $id_lelang)->get();
+        foreach ($video as $row) {
+            Storage::delete('public/'.$row->video);
+        }
+        VideoLelang::where('lelang_id', $id_lelang)->delete();
+
+        // hapus lelang
         $del = Lelang::where('id', $id_lelang)->delete();
         if ($del) {
             return response()->json(['success'=> 'true'],200);

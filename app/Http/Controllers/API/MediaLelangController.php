@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\MediaLelang;
 use App\Models\User;
+use App\Models\VideoLelang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 // use Illuminate\Support\Facades\Storage;
@@ -39,6 +40,7 @@ class MediaLelangController extends Controller
         $lelang_id= request()->lelang_id;
 
         MediaLelang::where('lelang_id', $lelang_id)->update(['status'=>0]);
+        VideoLelang::where('lelang_id', $lelang_id)->update(['status'=>0]);
         MediaLelang::where('id', $id)->update(['status'=>1]);
         
         return response()->json([

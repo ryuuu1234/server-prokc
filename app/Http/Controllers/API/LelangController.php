@@ -55,7 +55,9 @@ class LelangController extends Controller
     public function data_by($lelang_id)
     {
         $get = Lelang::find($lelang_id);
-        $get->load('media_lelang');
+        $get->load('media_lelang:id,lelang_id,image,status');
+        $get->load('video_lelang:id,lelang_id,video,status');
+        $get->load('user');
 
         return response()->json($get,200);
     }
@@ -103,6 +105,8 @@ class LelangController extends Controller
     {
         $id = $this->auth::user()->id;
         $get = Lelang::where('user_id', $id)->orderBy('id', 'DESC')->get();
+        $get->load('media_lelang:id,lelang_id,image,status');
+        $get->load('video_lelang:id,lelang_id,video,status');
         if ($get) {
             return response()->json(['success'=> 'true', 'data'=>$get],200);
         } else {
@@ -135,6 +139,34 @@ class LelangController extends Controller
             
         }
 
+    }
+
+    public function publish($id)
+    {
+        $publish = Lelang::where('id',$id)->update(['status'=>1]);
+        if ($publish) {
+            return response()->json(['success'=> 'true'],200);
+        } else {
+            return response()->json(['success'=> 'failed'],500);
+        }
+    }
+    public function get_hampir()
+    {   
+        $date1 = request()->date1;
+        $date2 = request()->date2;
+
+        $lelang = Lelang::whereRaw(
+            "(berakhir >= ? AND berakhir <= ?)", [$date1, $date2]
+            )
+            ->where('status', '>=', 1) // 1:publish
+            // ->with( ['detail_order_one.product:id,name', 'details_bubuk', 'details_bubuk.bubuk:id,nama'])
+            ->orderBy('berakhir', 'ASC')
+            ->get();
+        if ($lelang) {
+            return response()->json(['success'=> 'true', 'data'=> $lelang],200);
+        } else {
+            return response()->json(['success'=> 'failed'],500);
+        }
     }
     
 }

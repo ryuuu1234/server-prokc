@@ -9,6 +9,7 @@ use App\Http\Controllers\API\MeController;
 use App\Http\Controllers\API\TransactionController;
 use App\Http\Controllers\API\LelangController;
 use App\Http\Controllers\API\MediaLelangController;
+use App\Http\Controllers\API\VideoLelangController;
 use GuzzleHttp\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -61,14 +62,18 @@ Route::group(['middleware' => 'jwt.auth'], function() {
     Route::get('/lelang/hapus_by/{lelang}', [LelangController::class, 'hapus_by']);
     Route::get('/lelang/all_by', [LelangController::class, 'get_by_id']);
     Route::post('/lelang/upload_image', [LelangController::class, 'upload_image']);
+    Route::get('/lelang/publish/{lelang}', [LelangController::class, 'publish']);
+    Route::get('/lelang/all_hampir', [LelangController::class, 'get_hampir']);
 
     // media lelang
     Route::delete('/media_lelang/remove/{id}', [MediaLelangController::class, 'hapus_image']);
     Route::get('/media_lelang/update_status', [MediaLelangController::class, 'update_status']);
 
 
-
-
+    // video lelang
+    Route::post('/lelang/upload_video', [VideoLelangController::class, 'upload_video']);
+    Route::delete('/video_lelang/remove/{id}', [videoLelangController::class, 'hapus_video']);
+    Route::get('/video_lelang/update_status', [videoLelangController::class, 'update_status']);
 
 
 

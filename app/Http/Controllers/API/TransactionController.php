@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Bank;
+use App\Models\Payment;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -67,7 +68,7 @@ class TransactionController extends Controller
 
         $get = Transaction::where(['user_id'=>$user, 'jenis'=>$jenis])->first();
         if ($get) {
-            return response()->json($get,200);
+            return response()->json($this->_generatePaymentToken($get),200);
             } else {
                 return response()->json([
                     'message'       => 'Error',
@@ -94,7 +95,8 @@ class TransactionController extends Controller
         );
 
         if ($transaction) {
-            return response()->json($transaction,200);
+            $this->_generatePaymentToken($transaction);
+            // return response()->json($transaction,200);
         } else {
             return response()->json([
                 'message'       => 'Error',
@@ -117,6 +119,42 @@ class TransactionController extends Controller
 
         return $invoice;
 
+    }
+
+    private function _generatePaymentToken($trans)
+    {
+    //    $this->initPaymentGateway();
+
+       $customerDetails= [
+           'first_name' => $this->auth::user()->name,
+           'email' => $this->auth::user()->email,
+           'phone' => $this->auth::user()->notelp,
+       ];
+
+       $params = [
+           'enable_payment' => Payment::PAYMENT_CHANNELS,
+           'transaction_details'=> [
+                'order_id'    => $trans->invoice,
+                'gross_amount'  => $trans->nominal,
+           ],
+           'customer_details' => $customerDetails,
+           'expiry' => [
+               'start_time' => date('Y-m-d H:i:s T'),
+               'unit' => Payment::EXPIRY_UNIT,
+               'duration' => Payment::EXPIRY_DURATION,
+           ],
+
+        ];
+
+        // $snapToken = \Midtrans\Snap::createTransaction($params);
+        $snapToken = \Midtrans\Snap::getSnapToken($params);
+
+        dd($snapToken);
+        // return response()->json([
+        //     'message'       => 'Success',
+        //      'midtrains' => $snapToken
+        // ],500);
+       
     }
 
     

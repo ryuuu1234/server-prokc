@@ -20,7 +20,7 @@ class Controller extends BaseController
         \Midtrans\Config::$isProduction = false;
         // Set sanitization on (default)
         \Midtrans\Config::$isSanitized = true;
-        // Set 3DS transaction for credit card to true
+        // Set 3DS transaction for credit card to true dfd
         \Midtrans\Config::$is3ds = true;
     }
 }

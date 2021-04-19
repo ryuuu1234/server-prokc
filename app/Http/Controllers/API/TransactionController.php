@@ -146,7 +146,7 @@ class TransactionController extends Controller
 
         ];
 
-        // $snapToken = \Midtrans\Snap::createTransaction($params);
+        // $snapToken = \Midtrans\Snap::createTransaction($params); dsgsd
         $snapToken = \Midtrans\Snap::getSnapToken($params);
 
         dd($snapToken);

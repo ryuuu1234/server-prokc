@@ -31,7 +31,7 @@ class Payment extends Model
 	'danamon_online', 'akulaku'];
 
     public const EXPIRY_DURATION = 2;
-	public const EXPIRY_UNIT = 'days';
+	public const EXPIRY_UNIT = 'days'; 
 	  
 
 	public const CHALLENGE = 'challenge';

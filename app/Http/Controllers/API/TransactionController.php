@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Storage;
 // use Illuminate\Support\Facades\Storage;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Str;
+use Midtrans\Config;
+use Midtrans\CoreApi;
+use Midtrans\Snap;
 
 class TransactionController extends Controller
 {
@@ -25,9 +28,6 @@ class TransactionController extends Controller
     public function upload_image(Request $request){
 
         $user = $this->auth::user();
-        // Transaction::firstOrCreate([
-        //     'user_id' => $user->id
-        // ]);
         
         $transaction = Transaction::where(['user_id'=>$user->id, 'jenis'=>'pembayaran_activasi'])->first();
 
@@ -68,7 +68,7 @@ class TransactionController extends Controller
 
         $get = Transaction::where(['user_id'=>$user, 'jenis'=>$jenis])->first();
         if ($get) {
-            return response()->json($this->_generatePaymentToken($get),200);
+            return response()->json($get,200);
             } else {
                 return response()->json([
                     'message'       => 'Error',
@@ -83,6 +83,8 @@ class TransactionController extends Controller
             'tanggal' => 'required',
             'nominal' => 'required|numeric'
         ]);
+
+        
         $user = $this->auth::user()->id;
         $transaction = Transaction::updateOrCreate(['user_id'=> $user, 'jenis' => $request->jenis],
             [   
@@ -90,18 +92,47 @@ class TransactionController extends Controller
                 'bank_id'=>$request->bank_id,
                 'tanggal'=>$request->tanggal,
                 'nominal'=>$request->nominal,
-                'status'=>1, //menunggu validasi admin
+                // 'status'=>1, //menunggu validasi admin
             ]
         );
 
-        if ($transaction) {
-            $this->_generatePaymentToken($transaction);
-            // return response()->json($transaction,200);
-        } else {
-            return response()->json([
-                'message'       => 'Error',
-                'status_code'   => 500
-            ],500);
+        try {
+            Config::$serverKey = "SB-Mid-server-Co2LbAUKr740vzuhtgV7t6-R";
+
+            $customerDetails= [
+                'first_name' => $this->auth::user()->name,
+                'email' => $this->auth::user()->email,
+                'phone' => $this->auth::user()->notelp,
+            ];
+
+            $params = [
+                //    'enable_payment' => Payment::PAYMENT_CHANNELS,
+                'payment_type' => 'bank_transfer',
+                'transaction_details'=> [
+                        'order_id'    => $transaction->invoice,
+                        'gross_amount'  => $transaction->nominal,
+                ],
+                'customer_details' => $customerDetails,
+                'expiry' => [
+                    'start_time' => date('Y-m-d H:i:s T'),
+                    'unit' => Payment::EXPIRY_UNIT,
+                    'duration' => Payment::EXPIRY_DURATION,
+                ],
+                'bank_transfer' => [
+                    'bank' => 'bca',
+                    'va_number' => '111111',
+                ]
+
+            ];
+                $charge = CoreApi::charge($params);
+                if (!$charge) {
+                    return response()->json(['code'=> 0, 'message'=> 'Failed']);
+                }
+                return response()->json(['code'=> 1, 'message'=> 'Success', 'result'=>$charge], 200);
+        }
+        catch ( \Exception $e) {
+            dd($e);
+            return response()->json(['code'=> 0, 'message'=> 'Success', 'result'=>$e]);
         }
 
     }
@@ -124,36 +155,65 @@ class TransactionController extends Controller
     private function _generatePaymentToken($trans)
     {
     //    $this->initPaymentGateway();
+        try {
+            Config::$serverKey = "SB-Mid-server-Co2LbAUKr740vzuhtgV7t6-R";
 
-       $customerDetails= [
-           'first_name' => $this->auth::user()->name,
-           'email' => $this->auth::user()->email,
-           'phone' => $this->auth::user()->notelp,
-       ];
+            $customerDetails= [
+                'first_name' => $this->auth::user()->name,
+                'email' => $this->auth::user()->email,
+                'phone' => $this->auth::user()->notelp,
+            ];
 
-       $params = [
-           'enable_payment' => Payment::PAYMENT_CHANNELS,
-           'transaction_details'=> [
-                'order_id'    => $trans->invoice,
-                'gross_amount'  => $trans->nominal,
-           ],
-           'customer_details' => $customerDetails,
-           'expiry' => [
-               'start_time' => date('Y-m-d H:i:s T'),
-               'unit' => Payment::EXPIRY_UNIT,
-               'duration' => Payment::EXPIRY_DURATION,
-           ],
+            $params = [
+                //    'enable_payment' => Payment::PAYMENT_CHANNELS,
+                'payment_type' => 'transfer_bank',
+                'transaction_details'=> [
+                        'order_id'    => $trans->invoice,
+                        'gross_amount'  => $trans->nominal,
+                ],
+                'customer_details' => $customerDetails,
+                'expiry' => [
+                    'start_time' => date('Y-m-d H:i:s T'),
+                    'unit' => Payment::EXPIRY_UNIT,
+                    'duration' => Payment::EXPIRY_DURATION,
+                ],
+                'bank_transfer' => [
+                    'bank' => 'bca',
+                    'va_number' => '111111',
+                ]
 
-        ];
+            ];
 
-        // $snapToken = \Midtrans\Snap::createTransaction($params); dsgsd
-        $snapToken = \Midtrans\Snap::getSnapToken($params);
+            
+                // Get Snap Payment Page URL
+                // $snap = Snap::createTransaction($params);
+                $charge = CoreApi::charge($params);
+                // dd($trans);
+                // Redirect to Snap Payment Page
+                // header('Location: ' . $paymentUrl);
+                // if ($snap->token) {
+                //     $trans->payment_token = $snap->token;
+                //     $trans->payment_url = $snap->redirect_url;
 
-        dd($snapToken);
-        // return response()->json([
-        //     'message'       => 'Success',
-        //      'midtrains' => $snapToken
-        // ],500);
+                //     if($trans->save()) {
+                //         return response()->json([
+                //             'message'       => 'Success',
+                //         ], 200);
+                //     }
+                // }
+                dd($charge); exit;
+                if (!$charge) {
+                    return response()->json(['code'=> 1, 'message'=> 'Success', 'result'=>$charge]);
+                }
+                return response()->json(['code'=> 0, 'message'=> 'Failed']);
+        }
+        catch ( \Exception $e) {
+            // return response()->json([
+            //     'message'       => 'Error',
+            //     'data' => $e
+            // ], 500);
+            return response()->json(['code'=> 0, 'message'=> 'Success', 'result'=>$e]);
+        }
        
     }
 

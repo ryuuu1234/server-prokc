@@ -24,6 +24,23 @@ class TransactionController extends Controller
     {
        $this->auth = $auth;
     }
+
+    public function get_all_params()
+    {   
+        $user = $this->auth::user();
+
+        $data = Transaction::where('user_id', $user->id)->orderBy(request()->sortby, request()->sort)
+            ->when(request()->jenis, function($items) {
+                $items = $items->where('jenis', 'LIKE', '%' . request()->jenis . '%');
+        })->paginate(request()->per_page);
+       
+        
+        if ($data) {
+            return response()->json(['success'=> 'true', 'data'=> $data],200);
+        } else {
+            return response()->json(['success'=> 'failed'],500);
+        }
+    }
     
     public function upload_image(Request $request){
 
@@ -77,7 +94,17 @@ class TransactionController extends Controller
             } 
     }
 
-    public function konfirmasi(Request $request)
+    public function get_where()
+    {
+        $invoice = request()->invoice;
+        $data = Transaction::where('invoice', $invoice)->first();
+
+        // if(!$data)
+        //     return response()->json(['message'=>'failed']);
+        return response()->json(['message'=>'success', 'data'=>$data]); 
+    }
+
+    public function pembayaran_activasi(Request $request)
     {   
         $request->validate([
             'tanggal' => 'required',
@@ -85,56 +112,41 @@ class TransactionController extends Controller
         ]);
 
         
-        $user = $this->auth::user()->id;
-        $transaction = Transaction::updateOrCreate(['user_id'=> $user, 'jenis' => $request->jenis],
-            [   
-                'invoice'=> $this->invoice($request->jenis),
-                'bank_id'=>$request->bank_id,
-                'tanggal'=>$request->tanggal,
-                'nominal'=>$request->nominal,
-                // 'status'=>1, //menunggu validasi admin
-            ]
-        );
+        $user = $this->auth::user();
+        $get_bank = Bank::find($request->bank_id);
+        $charge = $this->chargeMidtrans($user, $get_bank, $request);
 
-        try {
-            Config::$serverKey = "SB-Mid-server-Co2LbAUKr740vzuhtgV7t6-R";
+        // $status_code = $charge->status_code;
+        // switch($status_code){
+        //     case '200';
+        //         $status = 3; //'SUCCESS'
+        //         break;
+        //     case '201';
+        //         $status = 1; //PENDING
+        //         break;
+        //     case '202';
+        //         $status = 2; //CANCEL
+        //         break;
+        // }
 
-            $customerDetails= [
-                'first_name' => $this->auth::user()->name,
-                'email' => $this->auth::user()->email,
-                'phone' => $this->auth::user()->notelp,
-            ];
+        $charge_status = $charge->transaction_status;
 
-            $params = [
-                //    'enable_payment' => Payment::PAYMENT_CHANNELS,
-                'payment_type' => 'bank_transfer',
-                'transaction_details'=> [
-                        'order_id'    => $transaction->invoice,
-                        'gross_amount'  => $transaction->nominal,
-                ],
-                'customer_details' => $customerDetails,
-                'expiry' => [
-                    'start_time' => date('Y-m-d H:i:s T'),
-                    'unit' => Payment::EXPIRY_UNIT,
-                    'duration' => Payment::EXPIRY_DURATION,
-                ],
-                'bank_transfer' => [
-                    'bank' => 'bca',
-                    'va_number' => '111111',
-                ]
-
-            ];
-                $charge = CoreApi::charge($params);
-                if (!$charge) {
-                    return response()->json(['code'=> 0, 'message'=> 'Failed']);
-                }
-                return response()->json(['code'=> 1, 'message'=> 'Success', 'result'=>$charge], 200);
-        }
-        catch ( \Exception $e) {
-            dd($e);
-            return response()->json(['code'=> 0, 'message'=> 'Success', 'result'=>$e]);
+        $transaction = new Transaction();
+        $transaction->invoice = $charge->order_id;
+        $transaction->payment_token = $charge->transaction_id;
+        $transaction->bank = strtolower($get_bank->name);
+        $transaction->nominal = $charge->gross_amount;
+        $transaction->tanggal = $charge->transaction_time;
+        $transaction->status = $charge_status;
+        $transaction->user_id = $user->id;
+        $transaction->jenis = $request->jenis;
+        $save = $transaction->save();
+        if (!$save) {
+            return response()->json(['code'=> 0, 'message'=> 'Transaction Failed']); exit;
         }
 
+        return response()->json(['code'=> 1, 'message'=> 'Success', 'result'=> $charge ], 200);
+        exit; 
     }
 
     public function invoice($jenis)
@@ -143,78 +155,49 @@ class TransactionController extends Controller
         if ($jenis == 'pembayaran_activasi') {
             $inv = 'ACT-';
         }
-
         $random = Str::random(10);
-
         $invoice = $inv.$random;
-
         return $invoice;
 
     }
 
-    private function _generatePaymentToken($trans)
-    {
-    //    $this->initPaymentGateway();
-        try {
-            Config::$serverKey = "SB-Mid-server-Co2LbAUKr740vzuhtgV7t6-R";
+    public function chargeMidtrans($user, $get_bank, $req)
+    {   
 
-            $customerDetails= [
-                'first_name' => $this->auth::user()->name,
-                'email' => $this->auth::user()->email,
-                'phone' => $this->auth::user()->notelp,
-            ];
+        Config::$serverKey = "SB-Mid-server-Co2LbAUKr740vzuhtgV7t6-R";
 
-            $params = [
-                //    'enable_payment' => Payment::PAYMENT_CHANNELS,
-                'payment_type' => 'transfer_bank',
-                'transaction_details'=> [
-                        'order_id'    => $trans->invoice,
-                        'gross_amount'  => $trans->nominal,
-                ],
-                'customer_details' => $customerDetails,
-                'expiry' => [
-                    'start_time' => date('Y-m-d H:i:s T'),
-                    'unit' => Payment::EXPIRY_UNIT,
-                    'duration' => Payment::EXPIRY_DURATION,
-                ],
-                'bank_transfer' => [
-                    'bank' => 'bca',
-                    'va_number' => '111111',
-                ]
+        
+        $customerDetails= [
+            'first_name' => $user->name,
+            'email' => $user->email,
+            'phone' => $user->notelp,
+        ];
+        $params = [
+            //    'enable_payment' => Payment::PAYMENT_CHANNELS,
+            'payment_type' => 'bank_transfer',
+            'transaction_details'=> [
+                'order_id'    => $this->invoice($req->jenis),
+                'gross_amount'  => $req->nominal,
+            ],
+            'customer_details' => $customerDetails,
+            'expiry' => [
+                'start_time' => date('Y-m-d H:i:s T'),
+                'unit' => Payment::EXPIRY_UNIT,
+                'duration' => Payment::EXPIRY_DURATION,
+            ],
+            'bank_transfer' => [
+                'bank' => strtolower($get_bank->name),
+                'va_number' => $get_bank->acc,
+            ]
+        ];
 
-            ];
+        $charge = CoreApi::charge($params);
+        if (!$charge) {
+            return response()->json(['code'=> 0, 'message'=> 'Charge Failed']); exit;
+        } 
 
-            
-                // Get Snap Payment Page URL
-                // $snap = Snap::createTransaction($params);
-                $charge = CoreApi::charge($params);
-                // dd($trans);
-                // Redirect to Snap Payment Page
-                // header('Location: ' . $paymentUrl);
-                // if ($snap->token) {
-                //     $trans->payment_token = $snap->token;
-                //     $trans->payment_url = $snap->redirect_url;
-
-                //     if($trans->save()) {
-                //         return response()->json([
-                //             'message'       => 'Success',
-                //         ], 200);
-                //     }
-                // }
-                dd($charge); exit;
-                if (!$charge) {
-                    return response()->json(['code'=> 1, 'message'=> 'Success', 'result'=>$charge]);
-                }
-                return response()->json(['code'=> 0, 'message'=> 'Failed']);
-        }
-        catch ( \Exception $e) {
-            // return response()->json([
-            //     'message'       => 'Error',
-            //     'data' => $e
-            // ], 500);
-            return response()->json(['code'=> 0, 'message'=> 'Success', 'result'=>$e]);
-        }
-       
+        return $charge;
+        
     }
 
     

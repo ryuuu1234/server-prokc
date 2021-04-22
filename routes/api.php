@@ -9,6 +9,7 @@ use App\Http\Controllers\API\MeController;
 use App\Http\Controllers\API\TransactionController;
 use App\Http\Controllers\API\LelangController;
 use App\Http\Controllers\API\MediaLelangController;
+use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\API\VideoLelangController;
 use GuzzleHttp\Middleware;
 use Illuminate\Http\Request;
@@ -51,7 +52,9 @@ Route::group(['middleware' => 'jwt.auth'], function() {
     // Transactions
     Route::post('/transaction/upload_image', [TransactionController::class, 'upload_image']);
     Route::get('/transaction', [TransactionController::class, 'get_trans']);
-    Route::post('/transaction/konfirmasi', [TransactionController::class, 'konfirmasi']);
+    Route::get('/transaction/get_all_params', [TransactionController::class, 'get_all_params']);
+    Route::post('/transaction/pembayaran_activasi', [TransactionController::class, 'pembayaran_activasi']);
+    Route::get('/transaction/get_where', [TransactionController::class, 'get_where']);
 
 
     // lelang
@@ -76,15 +79,20 @@ Route::group(['middleware' => 'jwt.auth'], function() {
     Route::get('/video_lelang/update_status', [videoLelangController::class, 'update_status']);
 
 
+    // notification
+    Route::post('/notification/post_from_client', [NotificationController::class, 'post_from_client']);
+
+
 
     Route::get('/auth/logout', [MeController::class, 'logout']);
 });
 
-// Route::group(['prefix'=> '/auth', ['middleware' => 'throttle:20,5']], function() {
-//     Route::post('register', [RegisterController::class, 'register']);
-//     Route::post('login', [LoginController::class, 'login']);
-// });
-
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+//no auth route
+Route::prefix('/notification')->group(function () {
+    
+    Route::post('/post_to_midtrans', [NotificationController::class, 'post_to_midtrans']); //ini dikirim ke midtrans
 });
+
+// Route::middleware('auth:api')->get('/user', function (Request $request) {
+//     return $request->user();
+// });

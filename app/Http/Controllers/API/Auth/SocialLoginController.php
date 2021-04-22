@@ -45,6 +45,7 @@ class SocialLoginController extends Controller
                 'email' => $email,
                 'password' => '',
                 'avatar' => $serviceUser->avatar,
+                'roles' => 'client',
             ]);
         }
 

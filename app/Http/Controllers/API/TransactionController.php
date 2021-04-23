@@ -83,7 +83,7 @@ class TransactionController extends Controller
         $user = $this->auth::user()->id;
         $jenis = request()->jenis;
 
-        $get = Transaction::where(['user_id'=>$user, 'jenis'=>$jenis])->first();
+        $get = Transaction::where(['user_id'=>$user, 'jenis'=>$jenis])->firstOrFail();
         if ($get) {
             return response()->json($get,200);
             } else {

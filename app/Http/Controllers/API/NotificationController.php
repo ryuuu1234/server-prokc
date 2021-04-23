@@ -25,7 +25,6 @@ class NotificationController extends Controller
     public function __construct(JWTAuth $auth)
     {
        $this->auth = $auth;
-    //    $this->middleware('jwt.auth', ['except' => ['post_to_midtrans']]); 
     }
 
     public function post_to_midtrans(Request $request)
@@ -74,7 +73,7 @@ class NotificationController extends Controller
     public function post_from_client(Request $request)
     {   
         $body = json_decode($request->getContent() , true);
-        $topik = json_encode($body['topik']) ;
+        $topik = json_encode($body['topik']);
         // $save = Notification::firstOrcreate(['topik'=>json_encode($coba)]);
         $to = $request->to;
         if ($to == 'client' || $to=='admin') {
@@ -85,7 +84,6 @@ class NotificationController extends Controller
             $token = User::whereIn('id', $to)->pluck('fcm_token')->toArray();
         }
 
-        // $this->broadcastMessage($this->auth::user()->name, $request->message, $request->link, $token); 
         try {
             foreach ($user as $key) {
                 Notification::create([
@@ -93,45 +91,51 @@ class NotificationController extends Controller
                     'sender'=> $this->auth::user()->name, 
                     'title'=> 'percobaan', 
                     'message'=> $request->message, 
-                    'link'=> $request->message, 
+                    'link'=> $request->link, 
                     'topik'=> $topik
-                    ]);
+                ]);
             }
-
             BroadcastMessage::sendMessage($this->auth::user()->name, $request->message, $request->link, $token);
-
-            // $this->broadcastMessage($this->auth::user()->name, $request->message, $request->link, $token);
             return response()->json(['message'=>'success'], 200);
         } catch (\Exception $e) {
             return response()->json(['message'=>'failed', 'result'=>$e]);
         }
     }
 
-    // private function broadcastMessage($sender, $message, $link, $token){
-    //     $optionBuilder = new OptionsBuilder();
-    //     $optionBuilder->setTimeToLive(60*20);
+    public function get_notif_by_id(){
+        $user = User::find(request()->id);
+        $notif = Notification::orderBy('id','DESC')->where('readed', 0)->where('user_id', $user->id)->get();
+        return response()->json([
+            'user'=>$user,
+            'notifications'=>$notif
+        ]);
+    }
 
-    //     $notificationBuilder = new PayloadNotificationBuilder('From ' . $sender);
-    //     $notificationBuilder->setBody($message)
-    //                         ->setSound('default')
-    //                         ->setClickAction($link);
+    public function get_notif_by_current_id(){
+        $user = User::find($this->auth::user()->id);
+        $notif = Notification::orderBy('id','DESC')->where('readed', 0)->where('user_id', $user->id)->get();
+        return response()->json([
+            'user'=>$user,
+            'notifications'=>$notif
+        ]);
+    }
 
-    //     $dataBuilder = new PayloadDataBuilder();
-    //     $dataBuilder->addData(['sender' => $sender, 'message'=>$message]);
-
-    //     $option = $optionBuilder->build();
-    //     $notification = $notificationBuilder->build();
-    //     $data = $dataBuilder->build();
-
-    //     // $tokens = User::all()->pluck('fcm_token')->toArray();
-
-    //     $downstreamResponse = FCM::sendTo($token, $option, $notification, $data);
-
-    //     return $downstreamResponse->numberSuccess();
-
-    // }
-
-    
+    public function mark_as_read(Request $request){
+        
+        try{
+            $update = Notification::where('id', $request->id)->update(['readed'=> 1]);
+            if (!$update) {
+                return response()->json(['satus'=>'failed', 'message'=>'update salah, coba ulangi']);
+            }
+            $notif = Notification::orderBy('id','DESC')->where('readed', 0)->where('user_id', $request->user_id)->get();
+            return response()->json(['status'=>'Success', 'notifications' => $notif], 200);
+        } catch (\Exception $e){
+            return response()->json([
+                'status'=>'failed',
+                'message'=> $e->getMessage()
+            ],400);
+        }
+    }
     
 
     

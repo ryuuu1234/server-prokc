@@ -15,6 +15,8 @@ use LaravelFCM\Message\PayloadDataBuilder;
 use LaravelFCM\Message\PayloadNotificationBuilder;
 use FCM;
 
+use App\Jobs\BroacastMessage;
+
 class NotificationController extends Controller
 {
     protected $auth;
@@ -94,6 +96,12 @@ class NotificationController extends Controller
             }
 
             $this->broadcastMessage($this->auth::user()->name, $request->message, $request->link, $token);
+            $notification = json([
+                'sender' => $this->auth::user()->name,
+                'message'=>$request->message,
+                'link'=>$request->link,
+                'token'=>$token 
+                ]);
             return response()->json(['message'=>'success'], 200);
         } catch (\Exception $e) {
             return response()->json(['message'=>'failed', 'result'=>$e]);

@@ -136,37 +136,7 @@ class TransactionController extends Controller
         exit; 
     }
 
-    public function pembayaran_deposit(Request $request)
-    {
-        $request->validate([
-            'tanggal' => 'required',
-            'nominal' => 'required|numeric'
-        ]);
-
-        
-        $user = $this->auth::user();
-        $get_bank = Bank::find($request->bank_id);
-        $charge = $this->chargeMidtrans($user, $get_bank, $request);
-
-        $charge_status = $charge->transaction_status;
-
-        $transaction = new Transaction();
-        $transaction->invoice = $charge->order_id;
-        $transaction->payment_token = $charge->transaction_id;
-        $transaction->bank = strtolower($get_bank->name);
-        $transaction->nominal = $charge->gross_amount;
-        $transaction->tanggal = $charge->transaction_time;
-        $transaction->status = $charge_status;
-        $transaction->user_id = $user->id;
-        $transaction->jenis = $request->jenis;
-        $save = $transaction->save();
-        if (!$save) {
-            return response()->json(['code'=> 0, 'message'=> 'Transaction Failed']); exit;
-        }
-
-        return response()->json(['code'=> 1, 'message'=> 'Success', 'result'=> $charge ], 200);
-        exit; 
-    }
+    
 
     public function invoice($jenis)
     {   

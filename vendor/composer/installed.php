@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '644ce1a07fb6595edcbbd01ccc06e27b808eb96d',
+    'reference' => 'a84be0feb59073e3b710c9b19cbe91c6a60f9d25',
     'name' => 'laravel/laravel',
   ),
   'versions' => 
@@ -497,7 +497,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '644ce1a07fb6595edcbbd01ccc06e27b808eb96d',
+      'reference' => 'a84be0feb59073e3b710c9b19cbe91c6a60f9d25',
     ),
     'laravel/sail' => 
     array (
@@ -1368,13 +1368,12 @@
     ),
     'tymon/jwt-auth' => 
     array (
-      'pretty_version' => 'dev-develop',
-      'version' => 'dev-develop',
+      'pretty_version' => '1.0.2',
+      'version' => '1.0.2.0',
       'aliases' => 
       array (
-        0 => '1.0.x-dev',
       ),
-      'reference' => 'ab00f2d7cce5f043067aef7849cdc792de2df635',
+      'reference' => 'e588cb719539366c0e2f6017f975379cb73e9680',
     ),
     'vlucas/phpdotenv' => 
     array (

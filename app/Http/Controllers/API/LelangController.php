@@ -59,7 +59,7 @@ class LelangController extends Controller
         $get->load('media_lelang:id,lelang_id,image,status');
         $get->load('video_lelang:id,lelang_id,video,status');
         $get->load('user');
-        $get->load('bid');
+        $get->load('bid.bidder');
 
         return response()->json($get,200);
     }

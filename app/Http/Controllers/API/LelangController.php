@@ -119,6 +119,7 @@ class LelangController extends Controller
         $get = Lelang::where('user_id', $id)->orderBy('id', 'DESC')->get();
         $get->load('media_lelang:id,lelang_id,image,status');
         $get->load('video_lelang:id,lelang_id,video,status');
+        $get->load('bid.bidder');
         if ($get) {
             return response()->json(['success'=> 'true', 'data'=>$get],200);
         } else {
@@ -182,6 +183,7 @@ class LelangController extends Controller
         $lelang->load('media_lelang:id,lelang_id,image,status');
         $lelang->load('video_lelang:id,lelang_id,video,status');
         $lelang->load('user');
+        $lelang->load('bid');
         
         if ($lelang) {
             return response()->json(['success'=> 'true', 'data'=> $lelang],200);

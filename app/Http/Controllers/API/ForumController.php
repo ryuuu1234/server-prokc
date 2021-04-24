@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+
 use App\Models\Forum;
 use App\Models\Lelang;
 use App\Models\User;
@@ -10,6 +11,7 @@ use App\Models\Bid;
 use App\Http\Controllers\API\Fcm\BroadcastMessage;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class ForumController extends Controller
@@ -30,7 +32,9 @@ class ForumController extends Controller
         'message'=>$request->message,
         ]);
         $lelang_user = Bid::select('user_id')->where('lelang_id',$request->lelang_id)->distinct()->get();
+
         $forum_user=Forum::select('user_id')->where('lelang_id',$request->lelang_id)->distinct()->get();
+
         $all=[];
         foreach($lelang_user as $key){
             $forum_user->push($key);
@@ -62,10 +66,13 @@ class ForumController extends Controller
     }
 
     public function get_by_lelang(){
+
         $lelang=Lelang::find(request()->lelang_id);
         $pesan=Forum::where('lelang_id',request()->lelang_id)->get();
+
         return response()->json([
             'chat'=>$pesan
         ]);
     }
+
 }

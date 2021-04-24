@@ -116,19 +116,6 @@ class TransactionController extends Controller
         $get_bank = Bank::find($request->bank_id);
         $charge = $this->chargeMidtrans($user, $get_bank, $request);
 
-        // $status_code = $charge->status_code;
-        // switch($status_code){
-        //     case '200';
-        //         $status = 3; //'SUCCESS'
-        //         break;
-        //     case '201';
-        //         $status = 1; //PENDING
-        //         break;
-        //     case '202';
-        //         $status = 2; //CANCEL
-        //         break;
-        // }
-
         $charge_status = $charge->transaction_status;
 
         $transaction = new Transaction();
@@ -148,6 +135,8 @@ class TransactionController extends Controller
         return response()->json(['code'=> 1, 'message'=> 'Success', 'result'=> $charge ], 200);
         exit; 
     }
+
+    
 
     public function invoice($jenis)
     {   

@@ -8,6 +8,8 @@ use App\Models\UserSocial;
 use Laravel\Socialite\Facades\Socialite;
 use Laravel\Socialite\Two\InvalidStateException;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Facades\Storage;
+use File; 
 
 class SocialLoginController extends Controller
 {   
@@ -39,14 +41,21 @@ class SocialLoginController extends Controller
 
         $user = $this->getExistingUser($serviceUser, $email, $service);
 
+        
+
         if (!$user) {
-            $user = User::create([
-                'name' => $serviceUser->getName(),
-                'email' => $email,
-                'password' => '',
-                'avatar' => $serviceUser->avatar,
-                'roles' => 'client',
-            ]);
+           
+            $user = User::updateOrCreate(
+                ['email' => $email,],
+                [
+                    'name' => $serviceUser->getName(),
+                    'password' => '',
+                    'avatar' => $serviceUser->getAvatar(),
+                    'roles' => 'client',
+                ]
+            );
+
+            // $this->saveAvatar($user, $serviceUser->getAvatar()); 
         }
 
         if ($this->needsToCreateSocial($user, $service)) {
@@ -78,4 +87,23 @@ class SocialLoginController extends Controller
             return $userSocial ? $userSocial->user : null;
         }
     }
+
+    // public function saveAvatar($user, $file)
+    // {
+    //     $fileContents = file_get_contents($file);
+        
+        
+    //     $path = file_get_contents($file)->store('images', 'public');
+    //     $user->avatar = $path; 
+           
+       
+    //     if ($user->save()) {
+    //         return response()->json($user,200);
+    //     } else {
+    //         return response()->json([
+    //             'message'       => 'Error on Updated',
+    //             'status_code'   => 500
+    //         ],500);
+    //     } 
+    // }
 }

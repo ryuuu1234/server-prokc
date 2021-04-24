@@ -36,6 +36,7 @@ class ComposerStaticInita84825b3a368dcf1820547755ce5ea00
         '6124b4c8570aa390c21fafd04a26c69f' => __DIR__ . '/..' . '/myclabs/deep-copy/src/DeepCopy/deep_copy.php',
         'b6b991a57620e2fb6b2f66f03fe9ddc2' => __DIR__ . '/..' . '/symfony/string/Resources/functions.php',
         'ed962a97bd972bc82007176b647d4e36' => __DIR__ . '/..' . '/facade/ignition/src/helpers.php',
+        'd21d43db5f6e840ee7b10744ec7fdf66' => __DIR__ . '/../..' . '/app/Helpers/helpers.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -583,6 +584,7 @@ class ComposerStaticInita84825b3a368dcf1820547755ce5ea00
         'App\\Http\\Controllers\\API\\BankController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/BankController.php',
         'App\\Http\\Controllers\\API\\BidController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/BidController.php',
         'App\\Http\\Controllers\\API\\Fcm\\BroadcastMessage' => __DIR__ . '/../..' . '/app/Http/Controllers/API/Fcm/BroadcastMessage.php',
+        'App\\Http\\Controllers\\API\\ForumController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/ForumController.php',
         'App\\Http\\Controllers\\API\\KategoriController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/KategoriController.php',
         'App\\Http\\Controllers\\API\\LelangController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/LelangController.php',
         'App\\Http\\Controllers\\API\\MeController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/MeController.php',
@@ -619,6 +621,8 @@ class ComposerStaticInita84825b3a368dcf1820547755ce5ea00
         'App\\Models\\App' => __DIR__ . '/../..' . '/app/Models/App.php',
         'App\\Models\\Bank' => __DIR__ . '/../..' . '/app/Models/Bank.php',
         'App\\Models\\Bid' => __DIR__ . '/../..' . '/app/Models/Bid.php',
+        'App\\Models\\Forum' => __DIR__ . '/../..' . '/app/Models/Forum.php',
+
         'App\\Models\\Kategori' => __DIR__ . '/../..' . '/app/Models/Kategori.php',
         'App\\Models\\Lelang' => __DIR__ . '/../..' . '/app/Models/Lelang.php',
         'App\\Models\\MediaLelang' => __DIR__ . '/../..' . '/app/Models/MediaLelang.php',

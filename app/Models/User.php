@@ -89,4 +89,5 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(Forum::class, 'user_id', 'id');
     }
+
 }

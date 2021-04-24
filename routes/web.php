@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Lelang;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
@@ -20,7 +21,12 @@ Route::get('/coba', function () {
     // $coba = Str::random(10);
     // $coba = Str::orderedUuid(10);
     // $coba = date('mdy');
-    echo $coba;
+    // echo $coba;
+    // $coba = Lelang::select('user_id')->distinct()->get();
+    //                 dd($coba);
+    $date = date('Y-m-d');
+    echo customTanggal($date,'d-m-Y');
+
 });
 
 // Route::get('/linkstorage', function () {

@@ -4,6 +4,7 @@ use App\Http\Controllers\API\Auth\LoginController;
 use App\Http\Controllers\API\Auth\RegisterController;
 use App\Http\Controllers\API\Auth\SocialLoginController;
 use App\Http\Controllers\API\BankController;
+use App\Http\Controllers\API\BidController;
 use App\Http\Controllers\API\KategoriController;
 use App\Http\Controllers\API\MeController;
 use App\Http\Controllers\API\TransactionController;
@@ -70,6 +71,7 @@ Route::group(['middleware' => 'jwt.auth'], function() {
     Route::post('/lelang/upload_image', [LelangController::class, 'upload_image']);
     Route::get('/lelang/publish/{lelang}', [LelangController::class, 'publish']);
     Route::get('/lelang/get_all_params', [LelangController::class, 'get_all_params']);
+    Route::get('/lelang/data_by/{lelang}', [LelangController::class, 'data_by']);
 
     // media lelang
     Route::delete('/media_lelang/remove/{id}', [MediaLelangController::class, 'hapus_image']);

@@ -15,7 +15,7 @@ class CreateLelangTable extends Migration
     {
         Schema::create('lelangs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id');
+            $table->foreignId('user_id'); 
             $table->string('id_lelang')->nullable();
             $table->string('judul')->nullable();
             $table->string('kategori')->nullable();

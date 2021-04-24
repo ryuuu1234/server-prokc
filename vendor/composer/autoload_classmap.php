@@ -12,6 +12,7 @@ return array(
     'App\\Http\\Controllers\\API\\Auth\\RegisterController' => $baseDir . '/app/Http/Controllers/API/Auth/RegisterController.php',
     'App\\Http\\Controllers\\API\\Auth\\SocialLoginController' => $baseDir . '/app/Http/Controllers/API/Auth/SocialLoginController.php',
     'App\\Http\\Controllers\\API\\BankController' => $baseDir . '/app/Http/Controllers/API/BankController.php',
+    'App\\Http\\Controllers\\API\\Fcm\\BroadcastMessage' => $baseDir . '/app/Http/Controllers/API/Fcm/BroadcastMessage.php',
     'App\\Http\\Controllers\\API\\KategoriController' => $baseDir . '/app/Http/Controllers/API/KategoriController.php',
     'App\\Http\\Controllers\\API\\LelangController' => $baseDir . '/app/Http/Controllers/API/LelangController.php',
     'App\\Http\\Controllers\\API\\MeController' => $baseDir . '/app/Http/Controllers/API/MeController.php',

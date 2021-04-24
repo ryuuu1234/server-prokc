@@ -47,16 +47,17 @@ class NotificationController extends Controller
 
             $status = $notification_body['transaction_status'];
             $transaction->status = $status;
-
             $transaction->save();
+
+            $topik = '{"type":"transaction","id":'.$transaction->id.'}';
 
             Notification::create([
                 'user_id'=>$transaction->user_id,
                 'sender'=> 'admin', 
                 'title'=> 'Transaction', 
                 'message'=> $status, 
-                'link'=> '/', 
-                'topik'=> $transaction->jenis
+                'link'=> 'transaction', 
+                'topik'=> $topik
             ]);
 
             $token = User::find($transaction->user_id)->pluck('fcm_token')->toArray();
@@ -104,7 +105,7 @@ class NotificationController extends Controller
 
     public function get_notif_by_id(){
         $user = User::find(request()->id);
-        $notif = Notification::orderBy('id','DESC')->where('readed', 0)->where('user_id', $user->id)->get();
+        $notif = Notification::orderBy('id','DESC')->where('user_id', $user->id)->paginate(20);
         return response()->json([
             'user'=>$user,
             'notifications'=>$notif
@@ -113,7 +114,7 @@ class NotificationController extends Controller
 
     public function get_notif_by_current_id(){
         $user = User::find($this->auth::user()->id);
-        $notif = Notification::orderBy('id','DESC')->where('readed', 0)->where('user_id', $user->id)->get();
+        $notif = Notification::orderBy('id','DESC')->where('user_id', $user->id)->paginate(20);
         return response()->json([
             'user'=>$user,
             'notifications'=>$notif

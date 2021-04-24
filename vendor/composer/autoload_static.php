@@ -584,6 +584,7 @@ class ComposerStaticInita84825b3a368dcf1820547755ce5ea00
         'App\\Http\\Controllers\\API\\Auth\\RegisterController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/Auth/RegisterController.php',
         'App\\Http\\Controllers\\API\\Auth\\SocialLoginController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/Auth/SocialLoginController.php',
         'App\\Http\\Controllers\\API\\BankController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/BankController.php',
+        'App\\Http\\Controllers\\API\\Fcm\\BroadcastMessage' => __DIR__ . '/../..' . '/app/Http/Controllers/API/Fcm/BroadcastMessage.php',
         'App\\Http\\Controllers\\API\\KategoriController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/KategoriController.php',
         'App\\Http\\Controllers\\API\\LelangController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/LelangController.php',
         'App\\Http\\Controllers\\API\\MeController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/MeController.php',

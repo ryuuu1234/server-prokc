@@ -79,4 +79,10 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(Lelang::class, 'user_id', 'id');
     }
+
+    public function bid()
+    {
+        return $this->hasMany(Bid::class, 'user_id', 'id');
+    }
+
 }

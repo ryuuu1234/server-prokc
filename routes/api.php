@@ -4,6 +4,7 @@ use App\Http\Controllers\API\Auth\LoginController;
 use App\Http\Controllers\API\Auth\RegisterController;
 use App\Http\Controllers\API\Auth\SocialLoginController;
 use App\Http\Controllers\API\BankController;
+use App\Http\Controllers\API\BidController;
 use App\Http\Controllers\API\KategoriController;
 use App\Http\Controllers\API\MeController;
 use App\Http\Controllers\API\TransactionController;
@@ -84,6 +85,10 @@ Route::group(['middleware' => 'jwt.auth'], function() {
     Route::post('/notification/mark_as_read', [NotificationController::class, 'mark_as_read']);
     Route::get('/notification/get_notif_by_id', [NotificationController::class, 'get_notif_by_id']);
     Route::get('/notification/get_notif_by_current_id', [NotificationController::class, 'get_notif_by_current_id']);
+
+
+    // bid
+    Route::post('/bid/store_bid', [BidController::class, 'store_bid']);
 
 
 

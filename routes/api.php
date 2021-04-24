@@ -68,6 +68,7 @@ Route::group(['middleware' => 'jwt.auth'], function() {
     Route::post('/lelang/upload_image', [LelangController::class, 'upload_image']);
     Route::get('/lelang/publish/{lelang}', [LelangController::class, 'publish']);
     Route::get('/lelang/get_all_params', [LelangController::class, 'get_all_params']);
+    Route::get('/lelang/data_by/{lelang}', [LelangController::class, 'data_by']);
 
     // media lelang
     Route::delete('/media_lelang/remove/{id}', [MediaLelangController::class, 'hapus_image']);
@@ -89,6 +90,10 @@ Route::group(['middleware' => 'jwt.auth'], function() {
 
     // bid
     Route::post('/bid/store_bid', [BidController::class, 'store_bid']);
+
+     //Forum Chat
+     Route::post('forum/add_message',[ForumController::class, 'add_message']);
+     Route::get('forum/get_by_lelang',[ForumController::class, 'get_by_lelang']);
 
 
 

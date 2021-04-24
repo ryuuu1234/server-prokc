@@ -22,8 +22,10 @@ Route::get('/coba', function () {
     // $coba = Str::orderedUuid(10);
     // $coba = date('mdy');
     // echo $coba;
-    $coba = Lelang::select('user_id')->distinct()->get();
-                    dd($coba);
+    // $coba = Lelang::select('user_id')->distinct()->get();
+    //                 dd($coba);
+    $date = date('Y-m-d');
+    echo customTanggal($date,'d-m-Y');
 });
 
 // Route::get('/linkstorage', function () {

@@ -54,7 +54,7 @@ class NotificationController extends Controller
             Notification::create([
                 'user_id'=>$transaction->user_id,
                 'sender'=> 'admin', 
-                'title'=> 'Transaction', 
+                'title'=> 'Transaksi Anda', 
                 'message'=> $status, 
                 'link'=> 'transaction', 
                 'topik'=> $topik
@@ -90,7 +90,7 @@ class NotificationController extends Controller
                 Notification::create([
                     'user_id'=>$key->id,
                     'sender'=> $this->auth::user()->name, 
-                    'title'=> 'percobaan', 
+                    'title'=> $request->title, 
                     'message'=> $request->message, 
                     'link'=> $request->link, 
                     'topik'=> $topik

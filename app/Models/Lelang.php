@@ -27,9 +27,14 @@ class Lelang extends Model
         return $this->hasMany(Bid::class, 'lelang_id', 'id');
     }
 
-    public function lelang()
+    public function user()
     {
         return $this->hasOne(User::class, 'id', 'user_id');
     }
+
+    // public function user()
+    // {
+    //     return $this->hasOne(User::class, 'id', 'user_id');
+    // }
 
 }

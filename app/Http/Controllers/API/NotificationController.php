@@ -86,52 +86,61 @@ class NotificationController extends Controller
             $user = User::whereIn('id', $request->to)->get();
             $token = User::whereIn('id', $to)->pluck('fcm_token')->toArray();
         }
-
-        // $this->broadcastMessage($this->auth::user()->name, $request->message, $request->link, $token); 
+ 
         try {
             foreach ($user as $key) {
                 Notification::create([
                     'user_id'=>$key->id,
                     'sender'=> $this->auth::user()->name, 
-                    'title'=> 'percobaan', 
+                    'title'=> $request->title, 
                     'message'=> $request->message, 
-                    'link'=> $request->message, 
+                    'link'=> $request->link, 
                     'topik'=> $topik
                     ]);
-            }
-
-            BroadcastMessage::sendMessage($this->auth::user()->name, $request->message, $request->link, $token);
-
-            // $this->broadcastMessage($this->auth::user()->name, $request->message, $request->link, $token);
-            return response()->json(['message'=>'success'], 200);
+                }
+                
+                
+                BroadcastMessage::sendMessage($this->auth::user()->name, $request->message, $request->link, $token);
+            return response()->json(['message'=>'success','token'=>$token], 200);
         } catch (\Exception $e) {
             return response()->json(['message'=>'failed', 'result'=>$e]);
         }
     }
 
-    // private function broadcastMessage($sender, $message, $link, $token){
-    //     $optionBuilder = new OptionsBuilder();
-    //     $optionBuilder->setTimeToLive(60*20);
+    public function get_notif_by_id(){
+        $user = User::find(request()->id);
+        $notif = Notification::orderby('id','DESC')->where('readed', 0)->where('user_id', $user->id)->get();
+        return response()->json([
+            'user'=>$user,
+            'notifications'=>$notif
+        ]);
+    }
+    public function get_notif_by_current_id(){
+        $user = User::find($this->auth::user()->id);
+        $notif = Notification::orderby('id','DESC')->where('readed', 0)->where('user_id', $user->id)->get();
+        return response()->json([
+            'user'=>$user,
+            'notifications'=>$notif
+        ]);
+    }
 
-    //     $notificationBuilder = new PayloadNotificationBuilder('From ' . $sender);
-    //     $notificationBuilder->setBody($message)
-    //                         ->setSound('default')
-    //                         ->setClickAction($link);
-
-    //     $dataBuilder = new PayloadDataBuilder();
-    //     $dataBuilder->addData(['sender' => $sender, 'message'=>$message]);
-
-    //     $option = $optionBuilder->build();
-    //     $notification = $notificationBuilder->build();
-    //     $data = $dataBuilder->build();
-
-    //     // $tokens = User::all()->pluck('fcm_token')->toArray();
-
-    //     $downstreamResponse = FCM::sendTo($token, $option, $notification, $data);
-
-    //     return $downstreamResponse->numberSuccess();
-
-    // }
+    public function mark_as_read(Request $request){
+        
+        try{
+            $update = Notification::where('id', $request->id)->update(['readed'=> 1]);
+            if (!$update) {
+                return response()->json(['satus'=>'failed', 'message'=>'update salah, coba ulangi']);
+            }
+            $notif = Notification::orderby('id','DESC')->where('readed', 0)->where('user_id', $request->user_id)->get();
+            return response()->json(['status'=>'Success', 'notifications' => $notif], 200);
+        } catch (\Exception $e){
+            
+            return response()->json([
+                'status'=>'failed',
+                'message'=> $e->getMessage()
+            ],400);
+        }
+    }
 
     
     

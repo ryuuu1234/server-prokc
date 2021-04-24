@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Lelang;
+use App\Models\Bid;
 use App\Models\MediaLelang;
 // use App\Models\Bank;
 // use App\Models\Transaction;
@@ -50,6 +51,7 @@ class LelangController extends Controller
     {
         $user_id = $this->auth::user()->id;
         $data = Lelang::where('user_id', $user_id)->orderBy('id', 'DESC')->first();
+        $data->load('bid');
         return response()->json($data,200); 
     }
 
@@ -59,6 +61,7 @@ class LelangController extends Controller
         $get->load('media_lelang:id,lelang_id,image,status');
         $get->load('video_lelang:id,lelang_id,video,status');
         $get->load('user');
+        $get->load('bid.bidder');
 
         return response()->json($get,200);
     }
@@ -118,6 +121,7 @@ class LelangController extends Controller
         $get = Lelang::where('user_id', $id)->orderBy('id', 'DESC')->get();
         $get->load('media_lelang:id,lelang_id,image,status');
         $get->load('video_lelang:id,lelang_id,video,status');
+        $get->load('bid.bidder');
         if ($get) {
             return response()->json(['success'=> 'true', 'data'=>$get],200);
         } else {
@@ -181,6 +185,7 @@ class LelangController extends Controller
         $lelang->load('media_lelang:id,lelang_id,image,status');
         $lelang->load('video_lelang:id,lelang_id,video,status');
         $lelang->load('user');
+        $lelang->load('bid');
         
         if ($lelang) {
             return response()->json(['success'=> 'true', 'data'=> $lelang],200);

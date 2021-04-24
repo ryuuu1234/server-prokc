@@ -22,9 +22,14 @@ class Lelang extends Model
         return $this->hasMany(VideoLelang::class, 'lelang_id', 'id');
     }
 
+    public function bid(){
+        return $this->hasMany(Bid::class, 'lelang_id', 'id');
+    }
+    
     public function user()
     {
         return $this->hasOne(User::class, 'id', 'user_id');
     }
+
 
 }

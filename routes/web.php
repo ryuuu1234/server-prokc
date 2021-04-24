@@ -19,7 +19,7 @@ use Illuminate\Support\Str;
 Route::get('/coba', function () {
     // $coba = Str::random(10);
     // $coba = Str::orderedUuid(10);
-    $coba = date('mdy');
+    // $coba = date('mdy');
     echo $coba;
 });
 

@@ -51,6 +51,33 @@ class MeController extends Controller
         }
        
     }
+    public function update_bidder(Request $request, User $user)
+    { 
+        if ($user) {
+            if($user->bidder==0){
+
+                $user->bidder = 1;
+                if ($user->save()) {
+                    return response()->json($user,200);
+                } else {
+                    return response()->json([
+                        'status'       => 'Error on Updated',
+                        'status_code'   => 500
+                    ],500);
+                } 
+            }else{
+                return response()->json([                
+                'message'=>'no data need to update',
+            ],200);
+            }         
+        } else {
+            return response()->json([
+                'status'       => 'User tidak ditemukan',
+                'status_code'   => 500
+            ],500);
+        }
+       
+    }
 
     public function upload_image(Request $request, User $user){
 
@@ -96,8 +123,7 @@ class MeController extends Controller
                 ],400);
         }
         }else{
-            return response()->json([
-                
+            return response()->json([                
                 'message'=>'no data need to update',
             ],200);
 

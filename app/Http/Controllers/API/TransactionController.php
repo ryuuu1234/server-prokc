@@ -86,22 +86,23 @@ class TransactionController extends Controller
         $get = Transaction::where(['user_id'=>$user, 'jenis'=>$jenis])->firstOrFail();
         if ($get) {
             return response()->json($get,200);
-            } else {
-                return response()->json([
-                    'message'       => 'Error',
-                    'status_code'   => 500
-                ],500);
-            } 
+        } else {
+            return response()->json([
+                'message'       => 'Error',
+                'status_code'   => 500
+            ],500);
+        } 
     }
 
     public function get_where()
     {
         $invoice = request()->invoice;
-        $data = Transaction::where('invoice', $invoice)->first();
+        $user = $this->auth::user();
 
-        // if(!$data)
-        //     return response()->json(['message'=>'failed']);
-        return response()->json(['message'=>'success', 'data'=>$data]); 
+
+        $data = Transaction::where(['invoice'=>$invoice, 'user_id'=>$user->id])
+                ->orderBy('id', 'DESC')->firstOrFail();
+        return response()->json(['message'=>'success', 'data'=>$data], 200); 
     }
 
     public function pembayaran_activasi(Request $request)

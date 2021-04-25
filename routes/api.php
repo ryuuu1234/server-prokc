@@ -1,10 +1,12 @@
 <?php
 
+use App\Http\Controllers\API\AppController;
 use App\Http\Controllers\API\Auth\LoginController;
 use App\Http\Controllers\API\Auth\RegisterController;
 use App\Http\Controllers\API\Auth\SocialLoginController;
 use App\Http\Controllers\API\BankController;
 use App\Http\Controllers\API\BidController;
+use App\Http\Controllers\API\ForumController; 
 use App\Http\Controllers\API\KategoriController;
 use App\Http\Controllers\API\MeController;
 use App\Http\Controllers\API\TransactionController;
@@ -19,7 +21,7 @@ use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| API Routes
+| API Routes   
 |--------------------------------------------------------------------------
 |
 | Here is where you can register API routes for your application. These
@@ -47,7 +49,7 @@ Route::group(['middleware' => 'jwt.auth'], function() {
     Route::get('/bank', [BankController::class, 'index']);
 
 
-    // KategoriController
+    // KategoriController 
     Route::get('/kategori', [KategoriController::class, 'index']);
 
 
@@ -102,10 +104,12 @@ Route::group(['middleware' => 'jwt.auth'], function() {
 //no auth route
 Route::get('/public/get_all_params', [LelangController::class, 'get_all_params']);
 Route::prefix('/notification')->group(function () {
-    
     Route::post('/post_to_midtrans', [NotificationController::class, 'post_to_midtrans']); //ini dikirim ke midtrans
 });
 
-// Route::middleware('auth:api')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
+//no auth route
+Route::prefix('/app')->group(function () {
+    Route::get('/get_app', [AppController::class, 'get_app']); //ini dikirim ke midtrans
+});
+
+Route::get('/public/get_all_params', [LelangController::class, 'get_all_params']);

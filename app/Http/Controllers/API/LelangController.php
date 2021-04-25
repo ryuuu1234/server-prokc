@@ -63,7 +63,6 @@ class LelangController extends Controller
         $get->load('user');
         $get->load('bid.bidder');
 
-
         return response()->json($get,200);
     }
 

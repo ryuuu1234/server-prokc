@@ -13,7 +13,7 @@ use LaravelFCM\Message\OptionsBuilder;
 use LaravelFCM\Message\PayloadDataBuilder;
 use LaravelFCM\Message\PayloadNotificationBuilder;
 use FCM;
-use App\Notification
+use App\Notification;
 
 class BroacastMessage implements ShouldQueue
 {
@@ -25,11 +25,11 @@ class BroacastMessage implements ShouldQueue
     *
     * @return void
     */
-    public $notification
+    public $notification;
     
     public function __construct(Notification $notification)
     {
-        $this->$notification = $notification
+        $this->$notification = $notification;
     }
 
     /**

@@ -12,7 +12,6 @@ use App\Http\Controllers\API\LelangController;
 use App\Http\Controllers\API\MediaLelangController;
 use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\API\VideoLelangController;
-use App\Http\Controllers\API\BidController;
 use App\Http\Controllers\API\ForumController;
 use GuzzleHttp\Middleware;
 use Illuminate\Http\Request;
@@ -59,8 +58,8 @@ Route::group(['middleware' => 'jwt.auth'], function() {
     Route::get('/transaction/get_all_params', [TransactionController::class, 'get_all_params']);
     Route::post('/transaction/pembayaran_activasi', [TransactionController::class, 'pembayaran_activasi']);
     Route::get('/transaction/get_where', [TransactionController::class, 'get_where']);
-
-
+    
+    
     // lelang
     Route::post('/lelang/add', [LelangController::class, 'add_data']);
     Route::get('/lelang/last', [LelangController::class, 'data_last']);
@@ -72,35 +71,36 @@ Route::group(['middleware' => 'jwt.auth'], function() {
     Route::get('/lelang/publish/{lelang}', [LelangController::class, 'publish']);
     Route::get('/lelang/get_all_params', [LelangController::class, 'get_all_params']);
     Route::get('/lelang/data_by/{lelang}', [LelangController::class, 'data_by']);
-
+    
     // media lelang
     Route::delete('/media_lelang/remove/{id}', [MediaLelangController::class, 'hapus_image']);
     Route::get('/media_lelang/update_status', [MediaLelangController::class, 'update_status']);
-
-
+    
+    
     // video lelang
     Route::post('/lelang/upload_video', [VideoLelangController::class, 'upload_video']);
     Route::delete('/video_lelang/remove/{id}', [videoLelangController::class, 'hapus_video']);
     Route::get('/video_lelang/update_status', [videoLelangController::class, 'update_status']);
-
-
+    
+    
     // notification
     Route::post('/notification/post_from_client', [NotificationController::class, 'post_from_client']);
     Route::get('/notification/get_notif_by_id', [NotificationController::class, 'get_notif_by_id']);
     Route::get('/notification/get_notif_by_current_id', [NotificationController::class, 'get_notif_by_current_id']);
     Route::post('/notification/mark_as_read', [NotificationController::class, 'mark_as_read']);
-
+    
     //bid
     Route::post('bid/store_bid',[BidController::class, 'store_bid']);
     
     //Forum Chat
     Route::post('forum/add_message',[ForumController::class, 'add_message']);
     Route::get('forum/get_by_lelang',[ForumController::class, 'get_by_lelang']);
-
+    
     Route::get('/auth/logout', [MeController::class, 'logout']);
 });
 
 //no auth route
+Route::get('/public/get_all_params', [LelangController::class, 'get_all_params']);
 Route::prefix('/notification')->group(function () {
     
     Route::post('/post_to_midtrans', [NotificationController::class, 'post_to_midtrans']); //ini dikirim ke midtrans

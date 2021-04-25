@@ -56,11 +56,15 @@ class NotificationController extends Controller
                 'sender'=> 'admin', 
                 'title'=> 'Transaksi Anda', 
                 'message'=> $status, 
-                'link'=> 'transaction', 
+                'link'=> 'transaksi', 
                 'topik'=> $topik
             ]);
 
-            $token = User::find($transaction->user_id)->pluck('fcm_token')->toArray();
+            $token = [];
+            $get_token = User::find($transaction->user_id)->fcm_token;
+            array_push($token, $get_token);
+
+            // $token = User::find($transaction->user_id)->pluck('fcm_token')->toArray();
 
             BroadcastMessage::sendMessage('admin', $status, '/', $token);
 
@@ -86,6 +90,7 @@ class NotificationController extends Controller
         }
 
         try {
+            $token = [];
             foreach ($user as $key) {
                 Notification::create([
                     'user_id'=>$key->id,
@@ -95,6 +100,8 @@ class NotificationController extends Controller
                     'link'=> $request->link, 
                     'topik'=> $topik
                 ]);
+                $get_token = User::find($key->user_id)->fcm_token;
+                array_push($token, $get_token);    
             }
             BroadcastMessage::sendMessage($this->auth::user()->name, $request->message, $request->link, $token);
             return response()->json(['message'=>'success'], 200);

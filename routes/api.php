@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\AppController;
 use App\Http\Controllers\API\Auth\LoginController;
 use App\Http\Controllers\API\Auth\RegisterController;
 use App\Http\Controllers\API\Auth\SocialLoginController;
@@ -102,8 +103,12 @@ Route::group(['middleware' => 'jwt.auth'], function() {
 
 //no auth route
 Route::prefix('/notification')->group(function () {
-    
     Route::post('/post_to_midtrans', [NotificationController::class, 'post_to_midtrans']); //ini dikirim ke midtrans
+});
+
+//no auth route
+Route::prefix('/app')->group(function () {
+    Route::get('/get_app', [AppController::class, 'get_app']); //ini dikirim ke midtrans
 });
 
 // Route::middleware('auth:api')->get('/user', function (Request $request) {

@@ -6,6 +6,7 @@ use App\Http\Controllers\API\Auth\RegisterController;
 use App\Http\Controllers\API\Auth\SocialLoginController;
 use App\Http\Controllers\API\BankController;
 use App\Http\Controllers\API\BidController;
+use App\Http\Controllers\API\ForumController; 
 use App\Http\Controllers\API\KategoriController;
 use App\Http\Controllers\API\MeController;
 use App\Http\Controllers\API\TransactionController;
@@ -19,7 +20,7 @@ use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| API Routes
+| API Routes   
 |--------------------------------------------------------------------------
 |
 | Here is where you can register API routes for your application. These
@@ -46,7 +47,7 @@ Route::group(['middleware' => 'jwt.auth'], function() {
     Route::get('/bank', [BankController::class, 'index']);
 
 
-    // KategoriController
+    // KategoriController 
     Route::get('/kategori', [KategoriController::class, 'index']);
 
 

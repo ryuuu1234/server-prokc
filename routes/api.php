@@ -112,7 +112,3 @@ Route::prefix('/app')->group(function () {
 });
 
 Route::get('/public/get_all_params', [LelangController::class, 'get_all_params']);
-
-// Route::middleware('auth:api')->get('/user', function (Request $request) {
-//     return $request->user();
-// });

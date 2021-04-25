@@ -14,7 +14,6 @@ use App\Http\Controllers\API\LelangController;
 use App\Http\Controllers\API\MediaLelangController;
 use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\API\VideoLelangController;
-use App\Http\Controllers\API\ForumController;
 use GuzzleHttp\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;

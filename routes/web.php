@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Lelang;
+use App\Models\User;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
@@ -24,8 +25,12 @@ Route::get('/coba', function () {
     // echo $coba;
     // $coba = Lelang::select('user_id')->distinct()->get();
     //                 dd($coba);
-    $date = date('Y-m-d');
-    echo customTanggal($date,'d-m-Y');
+    // $date = date('Y-m-d');
+    // echo customTanggal($date,'d-m-Y');
+    $hasil = [];
+    $token = User::find(1)->fcm_token;
+    array_push($hasil, $token);
+    dd($hasil, $token);
 
 });
 

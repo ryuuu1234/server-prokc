@@ -46,11 +46,11 @@ final class Versions
   'dragonmantank/cron-expression' => 'v3.1.0@7a8c6e56ab3ffcc538d05e8155bb42269abf1a0c',
   'egulias/email-validator' => '2.1.25@0dbf5d78455d4d6a41d186da50adc1122ec066f4',
   'fideloper/proxy' => '4.4.1@c073b2bd04d1c90e04dc1b787662b558dd65ade0',
-  'fruitcake/laravel-cors' => 'v2.0.3@01de0fe5f71c70d1930ee9a80385f9cc28e0f63a',
+  'fruitcake/laravel-cors' => 'v2.0.4@a8ccedc7ca95189ead0e407c43b530dc17791d6a',
   'graham-campbell/result-type' => 'v1.0.1@7e279d2cd5d7fbb156ce46daada972355cea27bb',
   'guzzlehttp/guzzle' => '7.3.0@7008573787b430c1c1f650e3722d9bba59967628',
   'guzzlehttp/promises' => '1.4.1@8e7d04f1f6450fef59366c399cfad4b9383aa30d',
-  'guzzlehttp/psr7' => '1.8.1@35ea11d335fd638b5882ff1725228b3d35496ab1',
+  'guzzlehttp/psr7' => '1.8.2@dc960a912984efb74d0a90222870c72c87f10c91',
   'laravel/framework' => 'v8.38.0@26a73532c54d2c090692bf2e3e64e449669053ba',
   'laravel/socialite' => 'v5.2.3@1960802068f81e44b2ae9793932181cf1cb91b5c',
   'laravel/tinker' => 'v2.6.1@04ad32c1a3328081097a181875733fa51f402083',
@@ -116,7 +116,7 @@ final class Versions
   'facade/ignition' => '2.8.3@a8201d51aae83addceaef9344592a3b068b5d64d',
   'facade/ignition-contracts' => '1.0.2@3c921a1cdba35b68a7f0ccffc6dffc1995b18267',
   'fakerphp/faker' => 'v1.14.1@ed22aee8d17c7b396f74a58b1e7fefa4f90d5ef1',
-  'filp/whoops' => '2.12.0@d501fd2658d55491a2295ff600ae5978eaad7403',
+  'filp/whoops' => '2.12.1@c13c0be93cff50f88bbd70827d993026821914dd',
   'hamcrest/hamcrest-php' => 'v2.0.1@8c3d0a3f6af734494ad8f6fbbee0ba92422859f3',
   'laravel/sail' => 'v1.5.0@7f2d520f8c7d6fc0e5e4949c1363f6ddff0ff116',
   'mockery/mockery' => '1.4.3@d1339f64479af1bee0e82a0413813fe5345a54ea',
@@ -151,8 +151,7 @@ final class Versions
   'sebastian/type' => '2.3.1@81cd61ab7bbf2de744aba0ea61fae32f721df3d2',
   'sebastian/version' => '3.0.2@c6c1022351a901512170118436c764e473f6de8c',
   'theseer/tokenizer' => '1.2.0@75a63c33a8577608444246075ea0af0d052e452a',
-  'laravel/laravel' => 'dev-main@42b605a8de961feaf01c2004d4834bcc84bfeba6',
-
+  'laravel/laravel' => 'dev-main@93e3c076ac05fb77e48f80ec3716e8211389888d',
 );
 
     private function __construct()

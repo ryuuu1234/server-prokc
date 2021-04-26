@@ -578,6 +578,7 @@ class ComposerStaticInita84825b3a368dcf1820547755ce5ea00
     public static $classMap = array (
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
+        'App\\Http\\Controllers\\API\\AppController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/AppController.php',
         'App\\Http\\Controllers\\API\\Auth\\LoginController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/Auth/LoginController.php',
         'App\\Http\\Controllers\\API\\Auth\\RegisterController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/Auth/RegisterController.php',
         'App\\Http\\Controllers\\API\\Auth\\SocialLoginController' => __DIR__ . '/../..' . '/app/Http/Controllers/API/Auth/SocialLoginController.php',
@@ -622,7 +623,6 @@ class ComposerStaticInita84825b3a368dcf1820547755ce5ea00
         'App\\Models\\Bank' => __DIR__ . '/../..' . '/app/Models/Bank.php',
         'App\\Models\\Bid' => __DIR__ . '/../..' . '/app/Models/Bid.php',
         'App\\Models\\Forum' => __DIR__ . '/../..' . '/app/Models/Forum.php',
-
         'App\\Models\\Kategori' => __DIR__ . '/../..' . '/app/Models/Kategori.php',
         'App\\Models\\Lelang' => __DIR__ . '/../..' . '/app/Models/Lelang.php',
         'App\\Models\\MediaLelang' => __DIR__ . '/../..' . '/app/Models/MediaLelang.php',

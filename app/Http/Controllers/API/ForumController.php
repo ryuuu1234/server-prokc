@@ -44,18 +44,23 @@ class ForumController extends Controller
         }
             $finally=array_unique($all);
             $token=[];
+            $toUser='';
         foreach($finally as $key){
             if($key!=$user->id){
-                $get=User::where('id', $key)->pluck('fcm_token')->toArray();
-                array_push($token,$get[0]);
+                // $get=User::where('id', $key)->pluck('fcm_token')->toArray();
+                $get=User::find($key)->fcm_token;
+                $toUser=$get;
+                array_push($token,$get);
             }
         }
             
         if ($forum) {
             $pesan=Forum::where('lelang_id',$request->lelang_id)->get();
-            BroadcastMessage::sendMessage($user->name, 'chat baru dari forum: '. $request->message, "/forum/" .$request->lelang_id, $token);
+            if(count($token)>=1){
+                BroadcastMessage::sendMessage($user->name, 'chat baru dari forum: '. $request->message, "/forum/" .$request->lelang_id, $token);
+            }
             return response()->json([
-                'chat'=>$pesan
+                'chat'=>$pesan,
             ],200);
         } else {
             return response()->json([

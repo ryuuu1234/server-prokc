@@ -49,7 +49,11 @@ class NotificationController extends Controller
             $transaction->status = $status;
             $transaction->save();
 
-            $topik = '{"type":"transaction","id":'.$transaction->id.'}';
+            // $topik = '{"type":"transaction","id":'.$transaction->id.'}';
+            $topik = [
+                'type'=> 'transaction',
+                'id'=> $transaction->id,
+            ];
 
             Notification::create([
                 'user_id'=>$transaction->user_id,
@@ -57,7 +61,7 @@ class NotificationController extends Controller
                 'title'=> 'Transaksi Anda', 
                 'message'=> $status, 
                 'link'=> 'transaksi', 
-                'topik'=> $topik
+                'topik'=> json_encode($topik)
             ]);
 
             $token = [];

@@ -38,18 +38,21 @@ class ForumController extends Controller
         foreach ($forum_user as $key) {
                 array_push($all,$key->user_id);
         }
-            $finally=array_unique($all);
-            $token=[];
+        $finally=array_unique($all);
+        $token=[];
         foreach($finally as $key){
             if($key!=$user->id){
-                $get=User::where('id', $key)->pluck('fcm_token')->toArray();
-                array_push($token,$get[0]);
+                $get=User::where('id', $key)->fcm_token;
+                array_push($token,$get);
             }
         }
             
         if ($forum) {
             $pesan=Forum::where('lelang_id',$request->lelang_id)->get();
-            BroadcastMessage::sendMessage($user->name, 'chat baru dari forum: '. $request->message, "/forum/" .$request->lelang_id, $token);
+            if(count($token)>=1){
+                BroadcastMessage::sendMessage($user->name, 'chat baru dari forum: '. $request->message, "forum/".$request->lelang_id, $token);
+            }
+            
             return response()->json([
                 'chat'=>$pesan
             ],200);

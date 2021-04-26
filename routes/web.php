@@ -25,12 +25,20 @@ Route::get('/coba', function () {
     // echo $coba;
     // $coba = Lelang::select('user_id')->distinct()->get();
     //                 dd($coba);
+
     // $date = date('Y-m-d');
     // echo customTanggal($date,'d-m-Y');
-    $hasil = [];
-    $token = User::find(1)->fcm_token;
-    array_push($hasil, $token);
-    dd($hasil);
+
+    // $hasil = [];
+    // $token = User::find(1)->fcm_token;
+    // array_push($hasil, $token);
+    $topik= [
+        'type'=>'transaction',
+        'id'=>1,
+    ];
+
+    // $topik = '{"type":"transaction","id":1}';
+    dd(json_encode($topik));
 });
 
 // Route::get('/linkstorage', function () {

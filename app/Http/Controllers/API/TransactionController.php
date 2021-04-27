@@ -8,6 +8,7 @@ use App\Models\Payment;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 // use Illuminate\Support\Facades\Storage;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -46,12 +47,18 @@ class TransactionController extends Controller
     {   
         $user = $this->auth::user();
 
-        $data = Transaction::selectRaw('sum(nominal)')
-                // ->whereColumn('jenis', request()->jenis)
-                ->whereRaw("(jenis = ? AND user_id = ? AND status = ?)",[request()->jenis, $user->id, 'settlement'])
-                // ->whereRaw('user_id' ,$user->id)
-                // ->whereRaw('status' ,'settlement')//SETTLEMENT
-                ->getQuery();
+        $data = DB::table('transactions')
+            // ->join('categories', 'transactions.category_id', '=', 'categories.id')
+            ->where('jenis', '=', request()->jenis)
+            ->where('user_id', '=', $user->id)
+            ->where('status', '=', 'settlement')
+            ->sum('transactions.nominal');
+        // $data = Transaction::selectRaw('sum(nominal)')
+        //         // ->whereColumn('jenis', request()->jenis)
+        //         ->whereRaw("(jenis = ? AND user_id = ? AND status = ?)",[request()->jenis, $user->id, 'settlement'])
+        //         // ->whereRaw('user_id' ,$user->id)
+        //         // ->whereRaw('status' ,'settlement')//SETTLEMENT
+        //         ->getQuery();
         // $data = Transaction::where('user_id', $user->id)
         //     ->when(request()->jenis, function($items) {
         //         $items = $items->where('jenis', 'LIKE', '%' . request()->jenis . '%');

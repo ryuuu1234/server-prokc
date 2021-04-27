@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Kategori;
 use App\Models\Lelang;
 use App\Models\User;
 use Illuminate\Support\Facades\Artisan;
@@ -32,13 +33,15 @@ Route::get('/coba', function () {
     // $hasil = [];
     // $token = User::find(1)->fcm_token;
     // array_push($hasil, $token);
-    $topik= [
-        'type'=>'transaction',
-        'id'=>1,
-    ];
+    // $topik= [
+    //     'type'=>'transaction',
+    //     'id'=>1,
+    // ];
 
+    $to = [1,2];
+    $user = Kategori::whereIn('id', $to)->get();   
     // $topik = '{"type":"transaction","id":1}';
-    dd(json_encode($topik));
+    dd($user);
 });
 
 // Route::get('/linkstorage', function () {

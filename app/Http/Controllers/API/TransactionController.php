@@ -48,9 +48,9 @@ class TransactionController extends Controller
 
         $data = Transaction::selectRaw('sum(nominal)')
                 // ->whereColumn('jenis', request()->jenis)
-                ->whereRaw('jenis' ,request()->jenis)
-                ->whereRaw('user_id' ,$user->id)
-                ->whereRaw('status' ,'settlement')//SETTLEMENT
+                ->whereRaw("(jenis = ? AND user_id = ? AND status = ?)",[request()->jenis, $user->id, 'settlement'])
+                // ->whereRaw('user_id' ,$user->id)
+                // ->whereRaw('status' ,'settlement')//SETTLEMENT
                 ->getQuery();
         // $data = Transaction::where('user_id', $user->id)
         //     ->when(request()->jenis, function($items) {

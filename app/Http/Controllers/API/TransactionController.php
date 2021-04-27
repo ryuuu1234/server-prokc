@@ -42,14 +42,20 @@ class TransactionController extends Controller
         }
     }
 
-    public function get_all()
+    public function get_total()
     {   
         $user = $this->auth::user();
 
-        $data = Transaction::where('user_id', $user->id)
-            ->when(request()->jenis, function($items) {
-                $items = $items->where('jenis', 'LIKE', '%' . request()->jenis . '%');
-        })->get();
+        $data = Transaction::selectRaw('sum(nominal)')
+                // ->whereColumn('jenis', request()->jenis)
+                ->whereRaw('jenis' ,request()->jenis)
+                ->whereRaw('user_id' ,$user->id)
+                ->whereRaw('status' ,'settlement')//SETTLEMENT
+                ->getQuery();
+        // $data = Transaction::where('user_id', $user->id)
+        //     ->when(request()->jenis, function($items) {
+        //         $items = $items->where('jenis', 'LIKE', '%' . request()->jenis . '%');
+        // })->get();
        
         
         if ($data) {

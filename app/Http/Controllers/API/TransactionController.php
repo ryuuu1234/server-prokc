@@ -53,6 +53,7 @@ class TransactionController extends Controller
             ->where('user_id', '=', $user->id)
             ->where('status', '=', 'settlement')
             ->sum('transactions.nominal');
+            
         // $data = Transaction::selectRaw('sum(nominal)')
         //         // ->whereColumn('jenis', request()->jenis)
         //         ->whereRaw("(jenis = ? AND user_id = ? AND status = ?)",[request()->jenis, $user->id, 'settlement'])
@@ -61,7 +62,7 @@ class TransactionController extends Controller
         //         ->getQuery();
         // $data = Transaction::where('user_id', $user->id)
         //     ->when(request()->jenis, function($items) {
-        //         $items = $items->where('jenis', 'LIKE', '%' . request()->jenis . '%');
+        //         $items = $items->where('jenis', 'LIKE', '%' . request()->jenis . '%');     
         // })->get();
        
         

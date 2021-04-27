@@ -24,28 +24,36 @@ class ForumController extends Controller
     public function add_message(Request $request){
         $user=$this->auth::user();
         $forum=Forum::create([
-        'lelang_id'=>$request->lelang_id,
-        'user_id'=>$user->id,
-        'user_name'=>$user->name,
-        'message'=>$request->message,
+            'lelang_id'=>$request->lelang_id,
+            'user_id'=>$user->id,
+            'user_name'=>$user->name,
+            'message'=>$request->message,
         ]);
         $lelang_user = Bid::select('user_id')->where('lelang_id',$request->lelang_id)->distinct()->get();
         $forum_user = Forum::select('user_id')->where('lelang_id',$request->lelang_id)->distinct()->get();
         $all=[];
+
         foreach($lelang_user as $key){
             $forum_user->push($key);
         }
+        
         foreach ($forum_user as $key) {
                 array_push($all,$key->user_id);
         }
         $finally=array_unique($all);
         $token=[];
         foreach($finally as $key){
-            if($key!=$user->id){
-                $get=User::where('id', $key)->fcm_token;
-                array_push($token,$get);
-            }
+            $get=User::find($key)->fcm_token;
+            array_push($token,$get);
         }
+        return response()->json([
+            'forum_user'=>$forum_user,
+            'lelang_user'=>$lelang_user,  
+            'finally'=>$finally,  
+            'all'=>$all,  
+            'token'=>$token,  
+            
+        ]); exit;
             
         if ($forum) {
             $pesan=Forum::where('lelang_id',$request->lelang_id)->get();

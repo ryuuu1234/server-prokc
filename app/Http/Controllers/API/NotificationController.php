@@ -70,7 +70,7 @@ class NotificationController extends Controller
 
             // $token = User::find($transaction->user_id)->pluck('fcm_token')->toArray();
 
-            BroadcastMessage::sendMessage('admin', $status, '/', $token);
+            BroadcastMessage::sendMessage('Admin', 'Transaksi '.$invoice, 'detail.transaksi/'.$transaction->id, $token);
 
             return response()->json('Ok', 200)->header('Content-Type', 'text/plain');
         } catch (\Exception $e) {

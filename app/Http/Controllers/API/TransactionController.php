@@ -41,6 +41,23 @@ class TransactionController extends Controller
             return response()->json(['success'=> 'failed'],500);
         }
     }
+
+    public function get_all()
+    {   
+        $user = $this->auth::user();
+
+        $data = Transaction::where('user_id', $user->id)
+            ->when(request()->jenis, function($items) {
+                $items = $items->where('jenis', 'LIKE', '%' . request()->jenis . '%');
+        })->get();
+       
+        
+        if ($data) {
+            return response()->json(['success'=> 'true', 'data'=> $data],200);
+        } else {
+            return response()->json(['success'=> 'failed'],500);
+        }
+    }
     
     public function upload_image(Request $request){
 

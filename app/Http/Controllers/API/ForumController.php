@@ -74,7 +74,7 @@ class ForumController extends Controller
 
     public function get_by_lelang(){
         $lelang = Lelang::find(request()->lelang_id);
-        $pesan = Forum::where('lelang_id',request()->lelang_id)->get();
+        $pesan = Forum::where('lelang_id',request()->lelang_id)->paginate(20);
         return response()->json([
             'chat'=>$pesan
         ]);

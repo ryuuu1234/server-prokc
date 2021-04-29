@@ -46,14 +46,14 @@ class ForumController extends Controller
             $get=User::find($key)->fcm_token;
             array_push($token,$get);
         }
-        return response()->json([
-            'forum_user'=>$forum_user,
-            'lelang_user'=>$lelang_user,  
-            'finally'=>$finally,  
-            'all'=>$all,  
-            'token'=>$token,  
+        // return response()->json([
+        //     'forum_user'=>$forum_user,
+        //     'lelang_user'=>$lelang_user,  
+        //     'finally'=>$finally,  
+        //     'all'=>$all,  
+        //     'token'=>$token,  
             
-        ]); exit;
+        // ]); exit;
             
         if ($forum) {
             $pesan=Forum::where('lelang_id',$request->lelang_id)->get();

@@ -14,6 +14,7 @@ use App\Http\Controllers\API\LelangController;
 use App\Http\Controllers\API\MediaLelangController;
 use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\API\VideoLelangController;
+use App\Http\Controllers\API\HitController;
 use GuzzleHttp\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -96,6 +97,10 @@ Route::group(['middleware' => 'jwt.auth'], function() {
     //Forum Chat
     Route::post('forum/add_message',[ForumController::class, 'add_message']);
     Route::get('forum/get_by_lelang',[ForumController::class, 'get_by_lelang']);
+    
+    //hit count
+    Route::post('hit/store',[HitController::class, 'store']);
+    Route::get('hit/get_hits',[HitController::class, 'get_hits']);
     
     Route::get('/auth/logout', [MeController::class, 'logout']);
 });

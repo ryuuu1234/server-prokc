@@ -8,9 +8,16 @@ use LaravelFCM\Message\OptionsBuilder;
 use LaravelFCM\Message\PayloadDataBuilder;
 use LaravelFCM\Message\PayloadNotificationBuilder;
 use FCM;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class BroadcastMessage extends Controller
 {
+    protected $auth;
+
+    public function __construct(JWTAuth $auth)
+    {
+       $this->auth = $auth;
+    }
     public static function sendMessage($sender, $message, $link, $token)
     {   
 

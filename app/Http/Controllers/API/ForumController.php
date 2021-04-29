@@ -45,10 +45,10 @@ class ForumController extends Controller
         $finally=array_unique($all);
         $token=[];
         foreach($finally as $key){
-            if($key!=$user->id){
-                $get=User::where('id', $key)->fcm_token;
-                array_push($token,$get);
-            }
+            $get=User::find( $key)->fcm_token;
+            array_push($token,$get);
+            // if($key!=$user->id){
+            // }
         }
             
         if ($forum) {

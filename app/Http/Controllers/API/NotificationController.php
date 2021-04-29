@@ -89,10 +89,11 @@ class NotificationController extends Controller
         $to = $request->to;
         if ($to == 'client' || $to=='admin') {
             $user = User::where('roles', $to)->get();
-            $token = User::where('roles', $to)->pluck('fcm_token')->toArray();
         } else {
-            $user = User::whereIn('id', $request->to)->get();
-            $token = User::whereIn('id', $to)->pluck('fcm_token')->toArray();
+            $user = User::whereIn('id', $to)->get();
+            // foreach($to as $key){
+            //     $user = User::whereIn('id', $key)->get();
+            // }
         }
 
         try {
@@ -107,13 +108,13 @@ class NotificationController extends Controller
                     'topik'=> $topik
 
                 ]);
-                $get_token = User::find($key->user_id)->fcm_token;
+                $get_token = User::find($key->id)->fcm_token;
                 array_push($token, $get_token);    
             }
             BroadcastMessage::sendMessage($this->auth::user()->name, $request->message, $request->link, $token);
-            return response()->json(['message'=>'success'], 200);
+            return response()->json(['message'=>'success', 'user'=>$user], 200);
         } catch (\Exception $e) {
-            return response()->json(['message'=>'failed', 'result'=>$e]);
+            return response()->json(['message'=>'failed', 'result'=>$e, 'token'=>$token]);
         }
     }
 

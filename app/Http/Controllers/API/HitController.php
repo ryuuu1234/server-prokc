@@ -21,25 +21,28 @@ class HitController extends Controller
     public function store(Request $req){
         $user=$this->auth::user();
         $lelang=Lelang::find($req->lelang_id);
+        $lelang->load('user');
         $count=Hit::where('lelang_id',$req->lelang_id)->first();
-        // return response()->json([
-        //     'count'=>$count,
-        //     // 'hit'=>$hit,
-        //     'user'=>$user,
-        //     'lelang'=>$lelang,]); exit;
-        if($count){       
-            $value = $count->hits_count + 1;   
-            $count->update(['hits_count'=>$value]);
+        if($user->id===$lelang->user->id){
+            $message='Owner can not count the hit';
         }else{
-            $value=1;
-            $hit=Hit::Create([
-                'user_id'=>$user->id,
-                'lelang_id'=>$req->lelang_id,
-                'hits_count'=>$value,
-                ]);
+
+            if($count){       
+                $value = $count->hits_count + 1;   
+                $count->update(['hits_count'=>$value]);
+                $message="Hit Updated";
+            }else{
+                $value=1;
+                $hit=Hit::Create([
+                    'user_id'=>$user->id,
+                    'lelang_id'=>$req->lelang_id,
+                    'hits_count'=>$value,
+                    ]);
+                $message='Hit Created';
+            }
         }
         return response()->json([
-            'message'=>'success',
+            'message'=>$message,
             'user'=>$user,
             'lelang'=>$lelang,
         ],200);

@@ -26,39 +26,47 @@ class ForumController extends Controller
     public function add_message(Request $request){
         $user=$this->auth::user();
         $forum=Forum::create([
-        'lelang_id'=>$request->lelang_id,
-        'user_id'=>$user->id,
-        'user_name'=>$user->name,
-        'message'=>$request->message,
+            'lelang_id'=>$request->lelang_id,
+            'user_id'=>$user->id,
+            'user_name'=>$user->name,
+            'message'=>$request->message,
         ]);
         $lelang_user = Bid::select('user_id')->where('lelang_id',$request->lelang_id)->distinct()->get();
 
         $forum_user=Forum::select('user_id')->where('lelang_id',$request->lelang_id)->distinct()->get();
 
         $all=[];
+
         foreach($lelang_user as $key){
             $forum_user->push($key);
         }
+        
         foreach ($forum_user as $key) {
                 array_push($all,$key->user_id);
         }
         $finally=array_unique($all);
         $token=[];
         foreach($finally as $key){
-            $get=User::find( $key)->fcm_token;
+            $get=User::find($key)->fcm_token;
             array_push($token,$get);
-            // if($key!=$user->id){
-            // }
         }
+        // return response()->json([
+        //     'forum_user'=>$forum_user,
+        //     'lelang_user'=>$lelang_user,  
+        //     'finally'=>$finally,  
+        //     'all'=>$all,  
+        //     'token'=>$token,  
+            
+        // ]); exit;
             
         if ($forum) {
             $pesan=Forum::where('lelang_id',$request->lelang_id)->get();
             if(count($token)>=1){
                 BroadcastMessage::sendMessage($user->name, 'chat baru dari forum: '. $request->message, "forum/".$request->lelang_id, $token);
             }
-            
+            $data=['data'=>$pesan];
             return response()->json([
-                'chat'=>$pesan,
+                'chat'=>$data,
             ],200);
         } else {
             return response()->json([
@@ -69,10 +77,10 @@ class ForumController extends Controller
     }
 
     public function get_by_lelang(){
-
-        $lelang=Lelang::find(request()->lelang_id);
-        $pesan=Forum::where('lelang_id',request()->lelang_id)->get();
-
+        $lelang = Lelang::find(request()->lelang_id);
+        $pesan = Forum::where('lelang_id',request()->lelang_id)
+        ->orderBy('created_at', 'DESC')
+        ->paginate(20);
         return response()->json([
             'chat'=>$pesan
         ]);

@@ -73,12 +73,15 @@ class ForumController extends Controller
     }
 
     public function get_by_lelang(){
-        $lelang = Lelang::find(request()->lelang_id);
+        // $lelang = Lelang::find(request()->lelang_id);
         $pesan = Forum::where('lelang_id',request()->lelang_id)
         ->orderBy('created_at', 'DESC')
         ->paginate(20);
+
+        $forum_user = Forum::select('user_id')->where('lelang_id',request()->lelang_id)->distinct()->get();
         return response()->json([
-            'chat'=>$pesan
+            'chat'=>$pesan,
+            'user_array'=>$forum_user,
         ]);
     }
     

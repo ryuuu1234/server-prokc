@@ -79,9 +79,17 @@ class ForumController extends Controller
         ->paginate(20);
 
         $forum_user = Forum::select('user_id')->where('lelang_id',request()->lelang_id)->distinct()->get();
+
+        $users=[];
+
+        foreach ($forum_user as $key) {
+            $get_user = User::find($key->user_id);
+            array_push($users,$get_user);
+        }
+
         return response()->json([
             'chat'=>$pesan,
-            'user_array'=>$forum_user,
+            'user_array'=>$users,
         ]);
     }
     

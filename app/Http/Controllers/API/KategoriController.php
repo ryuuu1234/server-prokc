@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Kategori;
+use App\Models\Lelang;
 use App\Models\User;
 use Illuminate\Http\Request;
 // use Illuminate\Support\Facades\Storage;
@@ -19,10 +20,17 @@ class KategoriController extends Controller
     }
     public function index(Kategori $categori)
     {   
+        $sekarang = date('Y-m-d H:i:s');
+
+        $sumJumlah = Kategori::selectRaw('sum(status)')
+                ->whereColumn('kategori', 'lelangs.name')
+                ->whereRaw("(berakhir < ?)",[$sekarang])
+                ->getQuery();
         
         return response()->json([
             'success'=>true,
-            'data'=>$categori->all()
+            'data'=>$categori->all(),
+            'jumlah'=>$sumJumlah
         ]);
     }
 

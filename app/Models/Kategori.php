@@ -10,4 +10,9 @@ class Kategori extends Model
     use HasFactory;
     protected $table = 'kategoris';
     protected $guarded=[];
+
+    public function lelangs()
+    {
+        return $this->hasMany(Lelang::class, 'kategori', 'name');
+    }
 }

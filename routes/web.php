@@ -27,8 +27,8 @@ Route::get('/coba', function () {
     // $coba = Lelang::select('user_id')->distinct()->get();
     //                 dd($coba);
 
-    $date = date('Y-m-d H:i:s');
-    echo $date;
+    // $date = date('Y-m-d H:i:s');
+    // echo $date;
 
     // $hasil = [];
     // $token = User::find(1)->fcm_token;
@@ -42,6 +42,20 @@ Route::get('/coba', function () {
     // $user = Kategori::whereIn('id', $to)->get();   
     // // $topik = '{"type":"transaction","id":1}';
     // dd($user);
+
+    $sekarang = date('Y-m-d H:i:s');
+
+        $sumJumlah = Lelang::selectRaw('sum(status)')
+                ->whereColumn('kategori', 'lelangs.kategori')
+                ->whereRaw('(berakhir > ?)',[$sekarang])
+                ->getQuery();
+
+        $data = Kategori::select('*')
+                ->with(['lelangs' => function($q) use($sekarang) {
+               $q->whereRaw('(berakhir > ?)',$sekarang);
+         }])->selectSub($sumJumlah, 'jumlah')->get();
+
+    dd($data);
 });
 
 // Route::get('/linkstorage', function () {

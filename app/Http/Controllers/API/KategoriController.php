@@ -24,12 +24,12 @@ class KategoriController extends Controller
 
         $sumJumlah = Lelang::selectRaw('sum(status)')
                 ->whereColumn('kategori', 'lelangs.kategori')
-                ->whereRaw('(berakhir > ) ',[$sekarang])
+                ->whereRaw('(berakhir > ?)',[$sekarang])
                 ->getQuery();
 
         $data = Kategori::select('*')
                 ->with(['lelangs' => function($q) use($sekarang) {
-               $q->whereRaw('(berakhir > ) ',[$sekarang]);
+               $q->whereRaw('(berakhir > ?)',[$sekarang]);
          }])->selectSub($sumJumlah, 'jumlah')->get();
         
         return response()->json([

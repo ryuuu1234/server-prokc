@@ -32,6 +32,11 @@ class Lelang extends Model
         return $this->hasOne(User::class, 'id', 'user_id');
     }
 
+    public function kategori()
+    {
+        return $this->hasOne(Kategori::class, 'name', 'kategori');
+    }
+
     // public function user()
     // {
     //     return $this->hasOne(User::class, 'id', 'user_id');

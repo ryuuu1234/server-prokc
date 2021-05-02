@@ -22,15 +22,15 @@ class KategoriController extends Controller
     {   
         $sekarang = date('Y-m-d H:i:s');
 
-        $sumJumlah = Lelang::selectRaw('sum(status)')
-                ->whereColumn('kategori', 'lelangs.kategori')
-                ->whereRaw('(berakhir > ?)',[$sekarang])
-                ->getQuery();
+        // $sumJumlah = Lelang::selectRaw('sum(status)')
+        //         ->whereColumn('kategori', 'lelangs.kategori')
+        //         ->whereRaw('(berakhir > ?)',[$sekarang])
+        //         ->getQuery();
 
         $data = Kategori::select('*')
                 ->with(['lelangs' => function($q) use($sekarang) {
                $q->whereRaw('(berakhir > ?)',[$sekarang]);
-         }])->selectSub($sumJumlah, 'jumlah')->get();
+         }])->get();
         
         return response()->json([
             'success'=>true,

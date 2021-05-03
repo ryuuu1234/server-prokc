@@ -178,7 +178,7 @@ class LelangController extends Controller
 
         $lelang = Lelang::where('status', '>=', 1)->orderBy(request()->sortby, request()->sort)
             ->when(request()->q, function($items) {
-                $items = $items->where('kategori_id', 'LIKE', '%' . request()->q . '%');
+                $items = $items->where('kategori', 'LIKE', '%' . request()->q . '%');
         })->paginate(request()->per_page);
         $lelang->load('media_lelang:id,lelang_id,image,status');
         $lelang->load('video_lelang:id,lelang_id,video,status');

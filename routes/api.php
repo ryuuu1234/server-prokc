@@ -49,6 +49,7 @@ Route::group(['middleware' => 'jwt.auth'], function() {
 
     // KategoriController 
     Route::get('/kategori', [KategoriController::class, 'index']);
+    Route::get('/kategori/where', [KategoriController::class, 'search']);
 
 
 

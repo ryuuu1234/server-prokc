@@ -52,9 +52,9 @@ class MeController extends Controller
        
     }
 
-    public function upload_image(Request $request, User $user){
+    public function upload_image(Request $request){
 
-        
+        $user = $this->auth::user();
         $old_path = $user->avatar;
         Storage::delete('public/'.$old_path);
         if($request->hasFile('image')) {

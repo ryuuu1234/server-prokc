@@ -40,6 +40,7 @@ Route::prefix('/auth')->group(function () {
 Route::group(['middleware' => 'jwt.auth'], function() {
     Route::get('/me', [MeController::class, 'index']);
     Route::put('/me/update/{user}', [MeController::class, 'update']);
+    Route::post('/me/upload_image', [TransactionController::class, 'upload_image']);
     Route::post('/prokc/sw-token', [MeController::class, 'swToken']);
 
 
@@ -49,6 +50,7 @@ Route::group(['middleware' => 'jwt.auth'], function() {
 
     // KategoriController 
     Route::get('/kategori', [KategoriController::class, 'index']);
+    Route::get('/kategori/where', [KategoriController::class, 'search']);
 
 
 
@@ -114,4 +116,3 @@ Route::prefix('/app')->group(function () {
 });
 
 Route::get('/public/get_all_params', [LelangController::class, 'get_all_params']);
-Route::get('/kategori/where', [KategoriController::class, 'search']);

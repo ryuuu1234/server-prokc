@@ -73,6 +73,8 @@ class LelangController extends Controller
             'harga_pembuka' =>$request->harga_pembuka,
             'kelipatan' =>$request->kelipatan,
             'deskripsi' =>$request->deskripsi,
+            'provinsi' =>$request->provinsi,
+            'kota' =>$request->kota,
         ]);
 
         if ($update) {

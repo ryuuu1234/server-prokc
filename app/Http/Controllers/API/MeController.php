@@ -56,34 +56,42 @@ class MeController extends Controller
 
         $user = $this->auth::user();
         $old_path = $user->avatar;
-        Storage::delete('public/'.$old_path);
-        if($request->hasFile('image')) {
-            $request->validate([
-                'image'=>'required|image|mimes:jpeg,png,jpg'
-            ]);
-            $path = $request->file('image')->store('images', 'public');
-            $save = User::find($user->id)->update([
-                'avatar'=>$path,
-            ]);
+        // Storage::delete('public/'.$old_path);
+        // if($request->hasFile('image')) {
+        //     $request->validate([
+        //         'image'=>'required|image|mimes:jpeg,png,jpg'
+        //     ]);
+        //     $path = $request->file('image')->store('images', 'public');
+            
+        //     $save = User::find($user->id)->update([
+        //         'avatar'=>$path,
+        //     ]);
             
         
        
-            if ($save) {
-                return response()->json($user,200);
-            } else {
-                return response()->json([
-                    'message'       => 'Error on upload',
-                    'status_code'   => 500
-                ],500);
-            } 
+        //     if ($save) {
+        //         return response()->json($user,200);
+        //     } else {
+        //         return response()->json([
+        //             'message'       => 'Error on upload',
+        //             'status_code'   => 500
+        //         ],500);
+        //     } 
 
-            exit;
-        }
+        //     exit;
+        // }
+
+        // return response()->json([
+        //     'message'       => 'Error on Updated',
+        // ],500);
 
         return response()->json([
-            'message'       => 'Error on Updated',
-            'status_code'   => 500
-        ],500);
+            'old_path' => $old_path,
+            'user' => $user,
+            'file' => $request->file('image')
+        ],200);
+
+        
 
     }
 

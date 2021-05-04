@@ -62,19 +62,28 @@ class MeController extends Controller
                 'image'=>'required|image|mimes:jpeg,png,jpg'
             ]);
             $path = $request->file('image')->store('images', 'public');
-            $user->avatar = $path; 
+            $save = User::find($user->id)->update([
+                'avatar'=>$path,
+            ]);
             
-        }
+        
        
-        if ($user->save()) {
-            return response()->json($user,200);
-        } else {
-            return response()->json([
-                'message'       => 'Error on Updated',
-                'status_code'   => 500
-            ],500);
-        } 
-        // return response()->json($request->all(),200);
+            if ($save) {
+                return response()->json($user,200);
+            } else {
+                return response()->json([
+                    'message'       => 'Error on upload',
+                    'status_code'   => 500
+                ],500);
+            } 
+
+            exit;
+        }
+
+        return response()->json([
+            'message'       => 'Error on Updated',
+            'status_code'   => 500
+        ],500);
 
     }
 

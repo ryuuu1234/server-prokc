@@ -40,7 +40,7 @@ Route::prefix('/auth')->group(function () {
 Route::group(['middleware' => 'jwt.auth'], function() {
     Route::get('/me', [MeController::class, 'index']);
     Route::put('/me/update/{user}', [MeController::class, 'update']);
-    Route::post('/me/upload_image', [TransactionController::class, 'upload_image']);
+    Route::post('/me/upload_image', [MeController::class, 'upload_image']);
     Route::post('/prokc/sw-token', [MeController::class, 'swToken']);
 
 

@@ -169,8 +169,7 @@ class TransactionController extends Controller
         if (!$save) {
             return response()->json(['code'=> 0, 'message'=> 'Transaction Failed']); exit;
         }
-
-        return response()->json(['code'=> 1, 'message'=> 'Success', 'result'=> $save ], 200);
+        return response()->json(['code'=> 1, 'message'=> 'Success', 'result'=> $transaction ], 200);
         exit; 
     }
 

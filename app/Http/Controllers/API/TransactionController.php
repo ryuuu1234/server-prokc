@@ -173,6 +173,42 @@ class TransactionController extends Controller
         exit; 
     }
 
+    public function postCharge(Request $request)
+    {
+       $invoice = $request->invoice;
+       $bank = $request->bank;
+       $user = $this->auth::user();
+       $get_trans = Transaction::where('invoice', $invoice)->where('user_id', $user->id)->first();
+
+
+        // ini transfer bank
+       $charge = $this->chargeMidtrans($user, $bank, $get_trans);
+        
+       $va_number_client = null;
+       if ($bank == 'permata') {
+           $va_number_client = $charge->permata_va_number;
+       } else {
+            $va_number_client = $charge->va_numbers[0]->va_number;
+       }
+
+       $update = Transaction::where(['user_id'=>$user->id, 'invoice', $invoice])->update([
+                    'payment_token'=>$charge->transaction_id,
+                    'nominal'=>$charge->gross_amount,
+                    'tanggal'=>$charge->transaction_time,
+                    'status'=>$charge->transaction_status,
+                    'va_number_client'=>$va_number_client,
+                    'bank'=>$request->bank,
+                ]);
+                    
+        
+        if (!$update) {
+            return response()->json(['code'=> 0, 'message'=> 'Transaction Failed']); exit;
+        }
+        return response()->json(['code'=> 1, 'message'=> 'Success', 'result'=> $get_trans ], 200);
+        exit; 
+
+    }
+
     
 
     public function invoice($jenis)
@@ -192,7 +228,10 @@ class TransactionController extends Controller
 
     }
 
-    public function chargeMidtrans($user, $get_bank, $req)
+
+    // ini kemidtrans
+
+    public function chargeMidtrans($user, $bank, $req)
     {   
 
         Config::$serverKey = "SB-Mid-server-Co2LbAUKr740vzuhtgV7t6-R";
@@ -207,18 +246,19 @@ class TransactionController extends Controller
             //    'enable_payment' => Payment::PAYMENT_CHANNELS,
             'payment_type' => 'bank_transfer',
             'transaction_details'=> [
-                'order_id'    => $this->invoice($req->jenis),
+                'order_id'    => $req->invoice,
                 'gross_amount'  => $req->nominal,
             ],
             'customer_details' => $customerDetails,
-            'expiry' => [
-                'start_time' => date('Y-m-d H:i:s T'),
-                'unit' => Payment::EXPIRY_UNIT,
-                'duration' => Payment::EXPIRY_DURATION,
-            ],
+            // 'expiry' => [
+            //     'start_time' => date('Y-m-d H:i:s T'),
+            //     'unit' => Payment::EXPIRY_UNIT,
+            //     'duration' => Payment::EXPIRY_DURATION,
+            // ],
             'bank_transfer' => [
-                'bank' => strtolower($get_bank->name),
-                'va_number' => $get_bank->acc,
+                'bank' => $bank,
+                'va_number' => '111111' //dari sononya
+                // 'va_number' => $get_bank->acc,
             ]
         ];
 

@@ -61,7 +61,7 @@ Route::group(['middleware' => 'jwt.auth'], function() {
     Route::post('/transaction/pembayaran_activasi', [TransactionController::class, 'pembayaran_activasi']);
     Route::get('/transaction/get_where', [TransactionController::class, 'get_where']);
     Route::get('/transaction/get_total', [TransactionController::class, 'get_total']);
-    Route::get('/transaction/charge', [TransactionController::class, 'chargeMidtrans']);
+    Route::post('/transaction/charge', [TransactionController::class, 'chargeMidtrans']);
 
 
     // lelang

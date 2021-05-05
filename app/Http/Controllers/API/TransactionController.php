@@ -114,7 +114,7 @@ class TransactionController extends Controller
         $user = $this->auth::user()->id;
         $jenis = request()->jenis;
 
-        $get = Transaction::where(['user_id'=>$user, 'jenis'=>$jenis])->firstOrFail();
+        $get = Transaction::where(['user_id'=>$user, 'jenis'=>$jenis])->first();
         if ($get) {
             return response()->json($get,200);
         } else {
@@ -132,7 +132,7 @@ class TransactionController extends Controller
 
 
         $data = Transaction::where(['invoice'=>$invoice, 'user_id'=>$user->id])
-                ->orderBy('id', 'DESC')->firstOrFail();
+                ->orderBy('id', 'DESC')->first();
         return response()->json(['message'=>'success', 'data'=>$data], 200); 
     }
 
@@ -140,23 +140,29 @@ class TransactionController extends Controller
     {   
         $request->validate([
             'tanggal' => 'required',
-            'nominal' => 'required|numeric'
+            'nominal' => 'required|numeric',
+            'bank_id' => 'required|numeric',
+            'jenis' => 'required',
         ]);
 
         
         $user = $this->auth::user();
-        $get_bank = Bank::find($request->bank_id);
-        $charge = $this->chargeMidtrans($user, $get_bank, $request);
+        $invoice = $this->invoice($request->jenis);
+        // $get_bank = Bank::find($request->bank_id);
+        // $charge = $this->chargeMidtrans($user, $get_bank, $request);
 
-        $charge_status = $charge->transaction_status;
+        // $charge_status = $charge->transaction_status;
 
         $transaction = new Transaction();
-        $transaction->invoice = $charge->order_id;
-        $transaction->payment_token = $charge->transaction_id;
-        $transaction->bank = strtolower($get_bank->name);
-        $transaction->nominal = $charge->gross_amount;
-        $transaction->tanggal = $charge->transaction_time;
-        $transaction->status = $charge_status;
+        $transaction->invoice = $invoice;
+        // $transaction->invoice = $charge->order_id;
+        // $transaction->payment_token = $charge->transaction_id;
+        // $transaction->bank = strtolower($get_bank->name);
+        // $transaction->bank_id = $request->bank_id;
+        // $transaction->nominal = $charge->gross_amount;
+        $transaction->nominal = $request->nominal;
+        // $transaction->tanggal = $charge->transaction_time;
+        $transaction->status = '1';
         $transaction->user_id = $user->id;
         $transaction->jenis = $request->jenis;
         $save = $transaction->save();
@@ -164,7 +170,7 @@ class TransactionController extends Controller
             return response()->json(['code'=> 0, 'message'=> 'Transaction Failed']); exit;
         }
 
-        return response()->json(['code'=> 1, 'message'=> 'Success', 'result'=> $charge ], 200);
+        return response()->json(['code'=> 1, 'message'=> 'Success', 'result'=> $save ], 200);
         exit; 
     }
 
@@ -175,7 +181,12 @@ class TransactionController extends Controller
         $inv = '';
         if ($jenis == 'pembayaran_activasi') {
             $inv = 'ACT-';
+        } elseif($jenis == 'pembayaran_deposit') {
+            $inv = 'DEP';
+        } else {
+            $inv = 'LEL';
         }
+
         $random = Str::random(10);
         $invoice = $inv.$random;
         return $invoice;

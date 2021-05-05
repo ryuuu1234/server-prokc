@@ -175,6 +175,11 @@ class TransactionController extends Controller
 
     public function postCharge(Request $request)
     {
+        $request->validate([
+            'invoice' => 'required',
+            'bank' => 'required',
+        ]);
+
        $invoice = $request->invoice;
        $bank = $request->bank;
        $user = $this->auth::user();
@@ -191,7 +196,7 @@ class TransactionController extends Controller
             $va_number_client = $charge->va_numbers[0]->va_number;
        }
 
-       $update = Transaction::where(['user_id'=>$user->id, 'invoice', $invoice])->update([
+       $update = Transaction::where(['user_id'=>$user->id, 'invoice' => $invoice])->update([
                     'payment_token'=>$charge->transaction_id,
                     'nominal'=>$charge->gross_amount,
                     'tanggal'=>$charge->transaction_time,

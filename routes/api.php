@@ -14,6 +14,7 @@ use App\Http\Controllers\API\LelangController;
 use App\Http\Controllers\API\MediaLelangController;
 use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\API\VideoLelangController;
+use App\Http\Controllers\API\VirtualController;
 use GuzzleHttp\Middleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -116,4 +117,10 @@ Route::prefix('/app')->group(function () {
     Route::get('/get_app', [AppController::class, 'get_app']); //ini dikirim ke midtrans
 });
 
-Route::get('/public/get_all_params', [LelangController::class, 'get_all_params']);
+Route::prefix('/public')->group(function () {
+    Route::get('/get_all_params', [LelangController::class, 'get_all_params']);
+    Route::post('/post_virtual', [VirtualController::class, 'post_data']);
+});
+
+
+

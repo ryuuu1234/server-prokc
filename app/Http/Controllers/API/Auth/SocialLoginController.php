@@ -45,9 +45,10 @@ class SocialLoginController extends Controller
 
         if (!$user) {
            
-            $user = User::updateOrCreate(
-                ['email' => $email,],
-                [
+            $user = User::create(
+                // ['email' => $email,],
+                [   
+                    'email' => $email,
                     'name' => $serviceUser->getName(),
                     'password' => '',
                     'avatar' => $serviceUser->getAvatar(),

@@ -40,5 +40,17 @@ class VirtualController extends Controller
 
     }
 
+    public function get_data()
+    {
+        $nama = request()->nama;
+
+        $data = Virtual::where('nama', $nama)->first();
+
+        if (!$data) {
+            return response()->json(['status'=>'failed'], 500);
+        }
+        return response()->json(['status'=>'success', 'result'=> $data], 200);
+    }
+
     
 }

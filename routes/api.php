@@ -120,6 +120,7 @@ Route::prefix('/app')->group(function () {
 Route::prefix('/public')->group(function () {
     Route::get('/get_all_params', [LelangController::class, 'get_all_params']);
     Route::post('/post_virtual', [VirtualController::class, 'post_data']);
+    Route::get('/get_virtual', [VirtualController::class, 'get_data']);
 });
 
 

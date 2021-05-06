@@ -141,7 +141,6 @@ class TransactionController extends Controller
         $request->validate([
             'tanggal' => 'required',
             'nominal' => 'required|numeric',
-            'bank_id' => 'required|numeric',
             'jenis' => 'required',
         ]);
 
@@ -155,13 +154,7 @@ class TransactionController extends Controller
 
         $transaction = new Transaction();
         $transaction->invoice = $invoice;
-        // $transaction->invoice = $charge->order_id;
-        // $transaction->payment_token = $charge->transaction_id;
-        // $transaction->bank = strtolower($get_bank->name);
-        // $transaction->bank_id = $request->bank_id;
-        // $transaction->nominal = $charge->gross_amount;
         $transaction->nominal = $request->nominal;
-        // $transaction->tanggal = $charge->transaction_time;
         $transaction->status = '1';
         $transaction->user_id = $user->id;
         $transaction->jenis = $request->jenis;

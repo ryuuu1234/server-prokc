@@ -52,6 +52,18 @@ class MeController extends Controller
        
     }
 
+    public function update_bidder()
+    { 
+        $user = $this->auth::user();
+        $update = User::find($user->id)->update(['bidder'=> 1]);
+        if (!$update) {
+            return response()->json(['code'=> 0, 'message'=> 'update Failed']); exit;
+        }
+
+        return response()->json(['code'=> 1, 'message'=> 'success'], 200);
+       
+    }
+
     public function upload_image(Request $request){
 
         $user = $this->auth::user();

@@ -42,6 +42,7 @@ Route::group(['middleware' => 'jwt.auth'], function() {
     Route::get('/me', [MeController::class, 'index']);
     Route::put('/me/update/{user}', [MeController::class, 'update']);
     Route::post('/me/upload_image', [MeController::class, 'upload_image']);
+    Route::post('/me/update_bidder', [MeController::class, 'update_bidder']);
     Route::post('/prokc/sw-token', [MeController::class, 'swToken']);
 
 

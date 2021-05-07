@@ -47,30 +47,26 @@ class TransactionController extends Controller
     {   
         $user = $this->auth::user();
 
-        $data = DB::table('transactions')
-            // ->join('categories', 'transactions.category_id', '=', 'categories.id')
-            ->where('jenis', '=', request()->jenis)
-            ->where('user_id', '=', $user->id)
-            ->where('status', '=', 'settlement')
-            ->sum('transactions.nominal');
-            
-        // $data = Transaction::selectRaw('sum(nominal)')
-        //         // ->whereColumn('jenis', request()->jenis)
-        //         ->whereRaw("(jenis = ? AND user_id = ? AND status = ?)",[request()->jenis, $user->id, 'settlement'])
-        //         // ->whereRaw('user_id' ,$user->id)
-        //         // ->whereRaw('status' ,'settlement')//SETTLEMENT
-        //         ->getQuery();
-        // $data = Transaction::where('user_id', $user->id)
-        //     ->when(request()->jenis, function($items) {
-        //         $items = $items->where('jenis', 'LIKE', '%' . request()->jenis . '%');     
-        // })->get();
+        try {
+            $jumlah = 0;
+            $tambahDeposit = DB::table('transactions')
+                ->where('jenis', '=', 'pembayaran_deposit')
+                ->where('user_id', '=', $user->id)
+                ->where('status', '=', 'settlement')
+                ->sum('transactions.nominal');
+    
+            $penarikanDeposit = DB::table('transactions')
+                ->where('jenis', '=', 'penarikan_deposit')
+                ->where('user_id', '=', $user->id)
+                ->where('status', '=', 'settlement')
+                ->sum('transactions.nominal');
+    
+            $jumlah = $tambahDeposit - $penarikanDeposit;
+            return response()->json(['success'=> 'true', 'data'=> $jumlah],200);
+        } catch (\Exception $e) {
+            return response()->json(['success'=> 'failed', 'error'=> $e],500);
+        }      
        
-        
-        if ($data) {
-            return response()->json(['success'=> 'true', 'data'=> $data],200);
-        } else {
-            return response()->json(['success'=> 'failed'],500);
-        }
     }
     
     public function upload_image(Request $request){

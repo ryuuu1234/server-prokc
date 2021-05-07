@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Http\Controllers\API\Deposit\DepositTotal;
 use App\Http\Controllers\Controller;
 use App\Models\Bank;
 use App\Models\Payment;
@@ -47,25 +48,27 @@ class TransactionController extends Controller
     {   
         $user = $this->auth::user();
 
-        try {
-            $jumlah = 0;
-            $tambahDeposit = DB::table('transactions')
-                ->where('jenis', '=', 'pembayaran_deposit')
-                ->where('user_id', '=', $user->id)
-                ->where('status', '=', 'settlement')
-                ->sum('transactions.nominal');
+        // try {
+        //     $jumlah = 0;
+        //     $tambahDeposit = DB::table('transactions')
+        //         ->where('jenis', '=', 'pembayaran_deposit')
+        //         ->where('user_id', '=', $user->id)
+        //         ->where('status', '=', 'settlement')
+        //         ->sum('transactions.nominal');
     
-            $penarikanDeposit = DB::table('transactions')
-                ->where('jenis', '=', 'penarikan_deposit')
-                ->where('user_id', '=', $user->id)
-                ->where('status', '=', 'settlement')
-                ->sum('transactions.nominal');
+        //     $penarikanDeposit = DB::table('transactions')
+        //         ->where('jenis', '=', 'penarikan_deposit')
+        //         ->where('user_id', '=', $user->id)
+        //         ->where('status', '=', 'settlement')
+        //         ->sum('transactions.nominal');
     
-            $jumlah = $tambahDeposit - $penarikanDeposit;
-            return response()->json(['success'=> 'true', 'data'=> $jumlah],200);
-        } catch (\Exception $e) {
-            return response()->json(['success'=> 'failed', 'error'=> $e],500);
-        }      
+        //     $jumlah = $tambahDeposit - $penarikanDeposit;
+        //     return response()->json(['success'=> 'true', 'data'=> $jumlah],200);
+        // } catch (\Exception $e) {
+        //     return response()->json(['success'=> 'failed', 'error'=> $e],500);
+        // }      
+        $total = DepositTotal::totalDeposit($user);
+        return response()->json(['success'=> 'true', 'data'=> $total],200);
        
     }
     

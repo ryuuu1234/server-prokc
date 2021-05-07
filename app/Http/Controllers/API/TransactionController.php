@@ -134,6 +134,7 @@ class TransactionController extends Controller
 
         $data = Transaction::where(['invoice'=>$invoice, 'user_id'=>$user->id])
                 ->orderBy('id', 'DESC')->first();
+        $data->load('penarikan');
         return response()->json(['message'=>'success', 'data'=>$data], 200); 
     }
 
@@ -179,7 +180,7 @@ class TransactionController extends Controller
 
         $transaction = new Transaction();
         $transaction->invoice = $invoice;
-        $transaction->nominal = $request->nominal;
+        $transaction->nominal = $request->nominal + $request->biaya;
         $transaction->status = 'pending'; //sedang proses
         $transaction->user_id = $user->id;
         $transaction->jenis = 'penarikan_deposit';

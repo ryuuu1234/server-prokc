@@ -42,11 +42,11 @@ class DepositTotal extends Controller
             //     ->where('user_id', '=', $user->id)
             //     ->where('status', '=', 'settlement')
             //     ->sum('transactions.nominal');
-    
+            $status = ['failure', 'back'];
             $deposit = DB::table('transactions')
                 ->where('jenis', '=', 'penarikan_deposit')
                 ->where('user_id', '=', $user->id)
-                ->where('status', '=', 'settlement')
+                ->whereNotIn('status', $status)
                 ->sum('transactions.nominal');
             return $deposit;
         } catch (\Exception $e) {

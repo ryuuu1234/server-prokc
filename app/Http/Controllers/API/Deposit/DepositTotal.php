@@ -59,7 +59,7 @@ class DepositTotal extends Controller
     {   
         $jumlah=0;
         $masuk = self::jumlahDepositMasuk($user);
-        $keluar = self::jumlahDepositMasuk($user);
+        $keluar = self::jumlahDepositKeluar($user);
         $jumlah = $masuk-$keluar;
         return $jumlah;
     }

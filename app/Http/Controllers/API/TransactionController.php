@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\API\Deposit\DepositTotal;
+use App\Http\Controllers\API\Fcm\BroadcastMessage;
 use App\Http\Controllers\Controller;
 use App\Models\Bank;
 use App\Models\Payment;
+use App\Models\Penarikan;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -165,6 +167,52 @@ class TransactionController extends Controller
         exit; 
     }
 
+    public function penarikan_deposit(Request $request)
+    {
+        $request->validate([
+            'nominal' => 'required|numeric',
+            'biaya' => 'required|numeric',
+        ]);
+
+        $invoice = $this->invoice('penarikan_deposit');
+        $user = $this->auth::user();
+
+        $transaction = new Transaction();
+        $transaction->invoice = $invoice;
+        $transaction->nominal = $request->nominal;
+        $transaction->status = 'pending'; //sedang proses
+        $transaction->user_id = $user->id;
+        $transaction->jenis = 'penarikan_deposit';
+        
+        if ($transaction->save()) {
+            $penarikan = new Penarikan();
+            $penarikan->transaction_id = $transaction->id;
+            $penarikan->user_id = $user->id;
+            $penarikan->rekening = $request->rekening;
+            $penarikan->atas_nama = $request->atas_nama;
+            $penarikan->nama_bank = $request->nama_bank;
+            $penarikan->nominal = $request->nominal;
+            $penarikan->biaya = $request->biaya;
+
+            $save = $penarikan->save();
+
+            if (!$save) {
+                return response()->json(['code'=> 0, 'message'=> 'Penarikan Failed']); exit;
+            }
+
+            $token = [];
+            $get_token = User::find($transaction->user_id)->fcm_token;
+            array_push($token, $get_token);
+
+            BroadcastMessage::sendMessage('Admin', 'Transaksi '.$invoice, 'detail.transaksi/'.$transaction->id, $token);
+            return response()->json(['code'=> 1, 'message'=> 'Success', 'result'=> $transaction ], 200);
+            exit; 
+        }
+
+        return response()->json(['code'=> 0, 'message'=> 'Transaction Failed']); exit;
+
+    }
+
     public function postCharge(Request $request)
     {
         $request->validate([
@@ -213,7 +261,7 @@ class TransactionController extends Controller
         $inv = '';
         if ($jenis == 'pembayaran_activasi') {
             $inv = 'ACT-';
-        } elseif($jenis == 'pembayaran_deposit') {
+        } elseif($jenis == 'pembayaran_deposit' || $jenis == 'penarikan_deposit') {
             $inv = 'DEP';
         } else {
             $inv = 'LEL';

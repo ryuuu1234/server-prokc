@@ -16,4 +16,9 @@ class Transaction extends Model
     {
         return $this->hasOne(User::class, 'id', 'user_id');
     }
+
+    public function penarikan()
+    {
+        return $this->hasOne(Penarikan::class, 'transaction_id', 'id');
+    }
 }

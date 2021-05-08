@@ -47,7 +47,7 @@ class KategoriController extends Controller
                     $items = $items->where('name', 'LIKE', '%' . request()->q . '%');
                 })
                 ->with(['lelangs' => function($q) use($sekarang) {
-               $q->whereRaw('(berakhir < ?)',[$sekarang]);
+               $q->whereRaw('(berakhir > ?)',[$sekarang]);
          }])->get();
         
         return response()->json([

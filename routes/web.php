@@ -43,19 +43,30 @@ Route::get('/coba', function () {
     // // $topik = '{"type":"transaction","id":1}';
     // dd($user);
 
-    $sekarang = date('Y-m-d H:i:s');
+    // $sekarang = date('Y-m-d H:i:s');
 
-        // $sumJumlah = Lelang::selectRaw('sum(status)')
-        //         ->whereColumn('kategori', 'lelangs.kategori')
-        //         ->whereRaw('(berakhir > ?)',[$sekarang])
-        //         ->getQuery();
+    //     // $sumJumlah = Lelang::selectRaw('sum(status)')
+    //     //         ->whereColumn('kategori', 'lelangs.kategori')
+    //     //         ->whereRaw('(berakhir > ?)',[$sekarang])
+    //     //         ->getQuery();
 
-        $data = Kategori::select('*')
-                ->with(['lelangs' => function($q) use($sekarang) {
-               $q->whereRaw('(berakhir > ?)',$sekarang);
-         }])->get();
+    //     $data = Kategori::select('*')
+    //             ->with(['lelangs' => function($q) use($sekarang) {
+    //            $q->whereRaw('(berakhir > ?)',$sekarang);
+    //      }])->get();
 
-    dd($data);
+    $search = "Bekko";
+    $lelang = Lelang::where('status', '>=', 1)->orderBy('updated_at', 'DESC')
+            ->when($search, function($items) {
+                $search = "Bekko";
+                $items = $items->where('kategori', 'LIKE', '%' . $search . '%');
+        })->paginate(request()->per_page);
+        $lelang->load('media_lelang:id,lelang_id,image,status');
+        $lelang->load('video_lelang:id,lelang_id,video,status');
+        $lelang->load('user');
+        $lelang->load('bid');
+
+    dd($lelang);
 });
 
 // Route::get('/linkstorage', function () {

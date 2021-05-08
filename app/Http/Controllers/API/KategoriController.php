@@ -29,7 +29,7 @@ class KategoriController extends Controller
 
         $data = Kategori::select('*')
                 ->with(['lelangs' => function($q) use($sekarang) {
-               $q->whereRaw('(berakhir > ?)',[$sekarang]);
+               $q->whereRaw('(berakhir > ? AND status >= ?)',[$sekarang, 1]);
          }])->get();
         
         return response()->json([

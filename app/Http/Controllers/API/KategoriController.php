@@ -42,15 +42,12 @@ class KategoriController extends Controller
     public function search(Kategori $categori)
     {   
         $sekarang = date('Y-m-d H:i:s');
-
-
-
         $data = Kategori::orderBy('name', 'ASC')
                 ->when(request()->q, function($items) {
                     $items = $items->where('name', 'LIKE', '%' . request()->q . '%');
                 })
                 ->with(['lelangs' => function($q) use($sekarang) {
-               $q->whereRaw('(berakhir > ?)',[$sekarang]);
+               $q->whereRaw('(berakhir < ?)',[$sekarang]);
          }])->get();
         
         return response()->json([

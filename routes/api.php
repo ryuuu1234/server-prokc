@@ -93,6 +93,7 @@ Route::group(['middleware' => 'jwt.auth'], function() {
     // notification
     Route::post('/notification/post_from_client', [NotificationController::class, 'post_from_client']);
     Route::post('/notification/mark_as_read', [NotificationController::class, 'mark_as_read']);
+    Route::post('/notification/mark_as_read_all', [NotificationController::class, 'mark_as_read_all']);
     Route::get('/notification/get_notif_by_id', [NotificationController::class, 'get_notif_by_id']);
     Route::get('/notification/get_notif_by_current_id', [NotificationController::class, 'get_notif_by_current_id']);
 

@@ -148,6 +148,24 @@ class NotificationController extends Controller
             ],400);
         }
     }
+
+    public function mark_as_read_all(Request $request){
+        
+        $user = $this->auth::user();
+        try{
+            $update = Notification::where('user_id', $user->id)->update(['readed'=> 1]);
+            if (!$update) {
+                return response()->json(['satus'=>'failed', 'message'=>'update salah, coba ulangi']);
+            }
+            $notif = Notification::orderBy('id','DESC')->where('readed', 0)->where('user_id', $request->user_id)->get();
+            return response()->json(['status'=>'Success', 'notifications' => $notif], 200);
+        } catch (\Exception $e){
+            return response()->json([
+                'status'=>'failed',
+                'message'=> $e->getMessage()
+            ],400);
+        }
+    }
     
 
     

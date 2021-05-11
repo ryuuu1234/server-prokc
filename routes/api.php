@@ -1,7 +1,15 @@
 <?php
 
+use App\Http\Controllers\API\Admin\DashboardController;
+use App\Http\Controllers\API\Admin\UserController;
+
+
+
+
+
 use App\Http\Controllers\API\AppController;
 use App\Http\Controllers\API\Auth\LoginController;
+use App\Http\Controllers\API\Auth\NewSocialLoginController;
 use App\Http\Controllers\API\Auth\RegisterController;
 use App\Http\Controllers\API\Auth\SocialLoginController;
 use App\Http\Controllers\API\BankController;
@@ -33,6 +41,7 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('/auth')->group(function () {
     Route::post('/register', [RegisterController::class, 'register']);
     Route::post('/login', [LoginController::class, 'login']);
+    Route::post('/social_login', [NewSocialLoginController::class, 'social_login']);
 
     Route::get('/login/{service}', [SocialLoginController::class, 'redirect']);
     Route::get('/login/{service}/callback', [SocialLoginController::class, 'callback']);
@@ -108,6 +117,21 @@ Route::group(['middleware' => 'jwt.auth'], function() {
 
 
     Route::get('/auth/logout', [MeController::class, 'logout']);
+
+
+
+
+
+    // khusus Admin ==================================================================================================================================
+    Route::prefix('/admin')->group(function () {
+
+        // dashboard
+        Route::get('/get_widget', [DashboardController::class, 'data_widget']); 
+
+        // user
+        Route::get('/get_users', [UserController::class, 'get_all_with_params']); 
+    });
+
 });
 
 //no auth route

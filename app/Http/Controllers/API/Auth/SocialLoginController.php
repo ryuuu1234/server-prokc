@@ -30,7 +30,8 @@ class SocialLoginController extends Controller
         try {
             $serviceUser = Socialite::driver($service)->stateless()->user();
         } catch (\Exception $e) {
-            return redirect(env('CLIENT_BASE_URL') . '/auth/social-callback?error=Unable to login using ' . $service . '. Please try again' . '&origin=login');
+            // return redirect(env('CLIENT_BASE_URL') . '/auth/social-callback?error=Unable to login using ' . $service . '. Please try again' . '&origin=login');
+            return response()->json(['error' => $e, 'service'=>$service]);
         }
         // $serviceUser = Socialite::driver($service)->stateless()->user();
         // dd($serviceUser);
@@ -69,7 +70,8 @@ class SocialLoginController extends Controller
 
         //dd($user);
         // return redirect(env('CLIENT_BASE_URL') . '/auth/social-callback?token=' . $this->auth->fromUser($user) . '&origin=' . ($newUser ? 'register' : 'login'));
-        return redirect(env('CLIENT_BASE_URL') . '/auth/social-callback?token=' . $this->auth::fromUser($user));
+        // return redirect(env('CLIENT_BASE_URL') . '/auth/social-callback?token=' . $this->auth::fromUser($user));
+        return $this->auth::fromUser($user)
     }
 
     public function needsToCreateSocial(User $user, $service)
@@ -89,22 +91,4 @@ class SocialLoginController extends Controller
         }
     }
 
-    // public function saveAvatar($user, $file)
-    // {
-    //     $fileContents = file_get_contents($file);
-        
-        
-    //     $path = file_get_contents($file)->store('images', 'public');
-    //     $user->avatar = $path; 
-           
-       
-    //     if ($user->save()) {
-    //         return response()->json($user,200);
-    //     } else {
-    //         return response()->json([
-    //             'message'       => 'Error on Updated',
-    //             'status_code'   => 500
-    //         ],500);
-    //     } 
-    // }
 }

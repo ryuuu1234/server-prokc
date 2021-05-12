@@ -53,11 +53,11 @@ class UserController extends Controller
         $status = $user->status;
         try {
             if ($status == 1) {
-                $user->update([
+                User::where('id', $id)->update([
                     'status'=>0
                 ]);
             } else {
-                $user->update([
+                User::where('id', $id)->update([
                     'status'=>1
                 ]);
             }

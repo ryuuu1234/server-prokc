@@ -26,6 +26,9 @@ class DataLelang extends Controller
         ->when(request()->q, function($search){
             $search = $search->where('kategori', 'LIKE', '%' . request()->q . '%');
         })
+        ->when(request()->status !='', function($status){
+            $status->where('status','=',request()->status);
+        })
         ->paginate(request()->per_page);
         $lelang->load('media_lelang:id,lelang_id,image,status');
         $lelang->load('video_lelang:id,lelang_id,video,status');

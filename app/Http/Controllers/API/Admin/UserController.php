@@ -26,11 +26,11 @@ class UserController extends Controller
         ->when(request()->q, function($search){
             $search = $search->where('name', 'LIKE', '%' . request()->q . '%');
         })
-        ->when(request()->status, function($status){
-            $status = $status->where('status', '=' ,request()->status);
+        ->when(request()->status != '', function($status){
+            $status->where('status', '=' ,request()->status);
         })
-        ->when(request()->bidder, function($bidder){
-            $bidder = $bidder->where('bidder','=',request()->bidder);
+        ->when(request()->bidder !='', function($bidder){
+            $bidder->where('bidder','=',request()->bidder);
         })
         ->paginate(request()->per_page);
 

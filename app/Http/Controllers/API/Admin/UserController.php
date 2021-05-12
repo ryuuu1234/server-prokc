@@ -25,7 +25,14 @@ class UserController extends Controller
         $result = User::orderBy(request()->sortby, request()->sorting)
         ->when(request()->q, function($search){
             $search = $search->where('name', 'LIKE', '%' . request()->q . '%');
-        })->paginate(request()->per_page);
+        })
+        ->when(request()->status, function($status){
+            $status = $status->where('status',request()->status);
+        })
+        ->when(request()->bidder, function($bidder){
+            $bidder = $bidder->where('bidder',request()->bidder);
+        })
+        ->paginate(request()->per_page);
 
         if (!$result) {
             return response()->json([

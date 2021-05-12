@@ -49,7 +49,7 @@ class UserController extends Controller
     public function kick_back_user(Request $request)
     {   
         $id = $request->id;
-        $user = User::find($id);
+        $user = User::where('id',$id)->first();
         $status = $user->status;
         try {
             if ($status == 1) {

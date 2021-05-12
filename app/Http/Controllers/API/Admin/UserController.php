@@ -46,6 +46,27 @@ class UserController extends Controller
 
     }
 
+    public function kick_back_user($id)
+    {
+        $user = User::find($id);
+        $status = $user->status;
+        try {
+            if ($status == 1) {
+                $user->update([
+                    'status'=>0
+                ]);
+            } else {
+                $user->update([
+                    'status'=>1
+                ]);
+            }
+            return response()->json(['success'=>true, 'result'=>$user],200);
+        } catch (\Exception $e) {
+            return response()->json(['success'=>false, 'message'=>$e],500);
+        }
+
+    }
+
 
    
 }

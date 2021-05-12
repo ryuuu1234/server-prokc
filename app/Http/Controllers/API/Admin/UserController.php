@@ -27,10 +27,10 @@ class UserController extends Controller
             $search = $search->where('name', 'LIKE', '%' . request()->q . '%');
         })
         ->when(request()->status, function($status){
-            $status = $status->whereHas('status', '=' ,request()->status);
+            $status = $status->where('status', '=' ,request()->status);
         })
         ->when(request()->bidder, function($bidder){
-            $bidder = $bidder->whereHas('bidder','=',request()->bidder);
+            $bidder = $bidder->where('bidder','=',request()->bidder);
         })
         ->paginate(request()->per_page);
 

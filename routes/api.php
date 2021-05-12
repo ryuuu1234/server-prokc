@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\Admin\DashboardController;
+use App\Http\Controllers\API\Admin\DataLelang;
 use App\Http\Controllers\API\Admin\UserController;
 
 
@@ -131,6 +132,9 @@ Route::group(['middleware' => 'jwt.auth'], function() {
         // user
         Route::get('/get_users', [UserController::class, 'get_all_with_params']); 
         Route::get('/kick_back_user', [UserController::class, 'kick_back_user']); 
+
+        // lelang
+        Route::get('/get_lelang', [DataLelang::class, 'get_all_with_params']);
     });
 
 });

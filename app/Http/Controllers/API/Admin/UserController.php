@@ -49,16 +49,17 @@ class UserController extends Controller
     public function kick_back_user(Request $request)
     {   
         $id = $request->id;
-        $user = User::where('id',$id)->first();
-        $status = $user->status;
+        
         try {
+            $user = User::where('id',$id)->first();
+            $status = $user->status;
             if ($status == 1) {
                 User::where('id', $id)->update([
-                    'status'=>0
+                    'status'=> 0
                 ]);
             } else {
                 User::where('id', $id)->update([
-                    'status'=>1
+                    'status'=> 1
                 ]);
             }
             return response()->json(['success'=>true, 'result'=>$user],200);

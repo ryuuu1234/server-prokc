@@ -46,8 +46,9 @@ class UserController extends Controller
 
     }
 
-    public function kick_back_user($id)
-    {
+    public function kick_back_user(Request $request)
+    {   
+        $id = $request->id;
         $user = User::find($id);
         $status = $user->status;
         try {

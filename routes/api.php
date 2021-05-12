@@ -130,7 +130,7 @@ Route::group(['middleware' => 'jwt.auth'], function() {
 
         // user
         Route::get('/get_users', [UserController::class, 'get_all_with_params']); 
-        Route::put('/kick_back_user/{id}', [UserController::class, 'kick_back_user']); 
+        Route::post('/kick_back_user', [UserController::class, 'kick_back_user']); 
     });
 
 });

@@ -46,9 +46,9 @@ class UserController extends Controller
 
     }
 
-    public function kick_back_user(Request $request)
+    public function kick_back_user()
     {   
-        $id = $request->id;
+        $id = request()->id;
         
         try {
             $user = User::where('id',$id)->first();

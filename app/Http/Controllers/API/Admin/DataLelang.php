@@ -22,20 +22,24 @@ class DataLelang extends Controller
 
     public function get_all_with_params()
     {
-        $result = Lelang::orderBy(request()->sortby, request()->sorting)
+        $lelang = Lelang::orderBy(request()->sortby, request()->sorting)
         ->when(request()->q, function($search){
             $search = $search->where('kategori', 'LIKE', '%' . request()->q . '%');
         })
         ->paginate(request()->per_page);
+        $lelang->load('media_lelang:id,lelang_id,image,status');
+        $lelang->load('video_lelang:id,lelang_id,video,status');
+        $lelang->load('user');
+        $lelang->load('bid');
 
-        if (!$result) {
+        if (!$lelang) {
             return response()->json([
                 'message'=>'failed',
             ],500); exit;
         }
         return response()->json([
             'message'=>'true',
-            'result'=>$result,
+            'result'=>$lelang,
         ],200);
 
     }

@@ -22,9 +22,22 @@ class DataLelang extends Controller
 
     public function get_all_with_params()
     {
+        
         $lelang = Lelang::orderBy(request()->sortby, request()->sorting)
-        ->when(request()->q, function($search){
-            $search = $search->where('kategori', 'LIKE', '%' . request()->q . '%');
+        ->when(request()->q != '', function($search){
+            // coba dynamic filter by
+            $i = 0;
+            $column_search = ['kategori', 'judul', 'id_lelang'];
+            foreach ($column_search as $item ) {
+                if ($i === 0) {
+                    $search->where($item, 'LIKE', '%' . request()->q . '%');
+                }else{
+                    $search->orWhere($item, 'LIKE', '%' . request()->q . '%');
+                }
+                // if($column_search->count() -1 == $i)
+                $i++;
+            }
+            
         })
         ->when(request()->status !='', function($status){
             $status->where('status','=',request()->status);

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\API\Admin\DashboardController;
 use App\Http\Controllers\API\Admin\DataLelang;
+use App\Http\Controllers\API\Admin\DataTransaksi;
 use App\Http\Controllers\API\Admin\UserController;
 
 
@@ -135,6 +136,9 @@ Route::group(['middleware' => 'jwt.auth'], function() {
 
         // lelang
         Route::get('/get_lelang', [DataLelang::class, 'get_all_with_params']);
+
+        // lelang
+        Route::get('/get_transaksi', [DataTransaksi::class, 'get_all_with_params']);
     });
 
 });

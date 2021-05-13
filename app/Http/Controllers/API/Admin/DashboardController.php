@@ -55,7 +55,7 @@ class DashboardController extends Controller
     public static function transaction_count_all()
     {   
         $count=0;
-        $count = Transaction::where('status','>=', 1)->count();
+        $count = Transaction::count();
         return $count;
     }
 }

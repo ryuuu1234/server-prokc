@@ -263,9 +263,9 @@ class TransactionController extends Controller
         if ($jenis == 'pembayaran_activasi') {
             $inv = 'ACT-';
         } elseif($jenis == 'pembayaran_deposit' || $jenis == 'penarikan_deposit') {
-            $inv = 'DEP';
+            $inv = 'DEP-';
         } else {
-            $inv = 'LEL';
+            $inv = 'LEL-';
         }
 
         $random = Str::random(10);

@@ -41,6 +41,11 @@ class DataTransaksi extends Controller
         $data->load('user');
         $data->load('penarikan');
 
+        $pending = self::jml_status('pending');
+        $settlement = self::jml_status('settlement');
+        $expire = self::jml_status('expire');
+        $failed = self::jml_status('failed');
+
         if (!$data) {
             return response()->json([
                 'message'=>'failed',
@@ -49,8 +54,19 @@ class DataTransaksi extends Controller
         return response()->json([
             'message'=>'true',
             'result'=>$data,
+            'pending'=>$pending,
+            'settlement'=>$settlement,
+            'expire'=>$expire,
+            'failed'=>$failed,
         ],200);
 
+    }
+
+    public static function jml_status($status)
+    {   
+        $count=0;
+        $count = Transaction::where('status', $status)->count();
+        return $count;
     }
 
 

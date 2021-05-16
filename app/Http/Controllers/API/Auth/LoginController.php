@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\API\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Mockery\Undefined;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
@@ -53,6 +55,36 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         
+
+        
+        $cek = User::where('email', $request->email)->first();
+        $status = null;
+        if (!$cek) {
+            return response()->json([
+                'success'=>false,
+                'errors'=> [
+                    'email' => [
+                        "Email ini Belum terdaftar!"
+                    ]
+                ]
+            ], 422); exit;
+        }
+
+        $status = $cek->status;
+
+        if ($status === 0) {
+            return response()->json([
+                'success'=>false,
+                'errors'=> [
+                    'email' => [
+                        "Verify Your Email first!"
+                    ]
+                ]
+            ], 422); exit;
+        }
+
+       
+        
         // If the class is using the ThrottlesLogins trait, we can automatically throttle
         // the login attempts for this application. We'll key this by the username and
         // the IP address of the client making these requests into this application.
@@ -72,6 +104,8 @@ class LoginController extends Controller
         // to login and redirect the user back to the login form. Of course, when this
         // user surpasses their maximum number of attempts they will get locked out.
         $this->incrementLoginAttempts($request);
+
+
 
         // attempt login with token
         if ($request->input('token')) {
@@ -117,5 +151,13 @@ class LoginController extends Controller
             'token' => $token
         ], 200);
        
+    }
+
+    public function getExistingUser($email)
+    {
+       
+        $user = User::where('email', $email)->first();
+        return $user ? $user : null;
+        
     }
 }

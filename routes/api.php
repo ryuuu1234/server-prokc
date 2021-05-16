@@ -42,6 +42,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('/auth')->group(function () {
     Route::post('/register', [RegisterController::class, 'register']);
+    Route::get('/register/send-email', [RegisterController::class, 'send_email']);
+    Route::get('/register/update-status', [RegisterController::class, 'update_status']);
     Route::post('/login', [LoginController::class, 'login']);
     Route::post('/social_login', [NewSocialLoginController::class, 'social_login']);
 

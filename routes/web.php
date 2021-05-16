@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\SendMail;
 use App\Models\Kategori;
 use App\Models\Lelang;
 use App\Models\User;
@@ -7,6 +8,9 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+
+
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +22,8 @@ use Illuminate\Support\Str;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('/send-email', [SendMail::class, 'index']);
 
 Route::get('/coba', function () {
     // $coba = Str::random(10);
@@ -55,18 +61,20 @@ Route::get('/coba', function () {
     //            $q->whereRaw('(berakhir > ?)',$sekarang);
     //      }])->get();
 
-    $search = "Bekko";
-    $lelang = Lelang::where('status', '>=', 1)->orderBy('updated_at', 'DESC')
-            ->when($search, function($items) {
-                $search = "Bekko";
-                $items = $items->where('kategori', 'LIKE', '%' . $search . '%');
-        })->paginate(request()->per_page);
-        $lelang->load('media_lelang:id,lelang_id,image,status');
-        $lelang->load('video_lelang:id,lelang_id,video,status');
-        $lelang->load('user');
-        $lelang->load('bid');
+    // $search = "Bekko";
+    // $lelang = Lelang::where('status', '>=', 1)->orderBy('updated_at', 'DESC')
+    //         ->when($search, function($items) {
+    //             $search = "Bekko";
+    //             $items = $items->where('kategori', 'LIKE', '%' . $search . '%');
+    //     })->paginate(request()->per_page);
+    //     $lelang->load('media_lelang:id,lelang_id,image,status');
+    //     $lelang->load('video_lelang:id,lelang_id,video,status');
+    //     $lelang->load('user');
+    //     $lelang->load('bid');
 
-    dd($lelang);
+    // dd($lelang);
+    $otp = rand(00000,55555);
+    echo $otp;
 });
 
 // Route::get('/linkstorage', function () {

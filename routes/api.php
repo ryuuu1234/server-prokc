@@ -145,6 +145,7 @@ Route::group(['middleware' => 'jwt.auth'], function() {
 
         // pengaturan app
         Route::get('/get_app', [AppAdminController::class, 'get_data']);
+        Route::get('/update_app', [AppAdminController::class, 'update_data']);
     });
 
 });

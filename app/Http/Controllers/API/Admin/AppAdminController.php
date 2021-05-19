@@ -24,4 +24,26 @@ class AppAdminController extends Controller
        $data = App::find(1);
        return response()->json(['message'=>'success', 'result'=>$data]);
    }
+
+   public function update_data(Request $request)
+   {
+        $request->validate([
+            'name'=>'required',
+            'alamat'=>'required',
+        ]);
+
+        $app = App::find(1);
+
+        $update = $app->update([
+            'name'=>$request->name,
+            'alamat'=>$request->alamat,
+            'no_cs'=>$request->no_cs,
+            'wa_cs'=>$request->wa_cs,
+        ]);
+
+        if (!$update) {
+            return response()->json(['message'=>'failed'], 500);
+        }
+        return response()->json(['messaage'=>'success', 'result'=>$update]);
+   }
 }

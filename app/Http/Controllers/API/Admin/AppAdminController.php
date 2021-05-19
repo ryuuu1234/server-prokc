@@ -10,7 +10,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 
 
 
-class AppController extends Controller
+class AppAdminController extends Controller
 {
     protected $auth;
 

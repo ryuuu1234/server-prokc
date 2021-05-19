@@ -4,6 +4,7 @@ use App\Http\Controllers\API\Admin\DashboardController;
 use App\Http\Controllers\API\Admin\DataLelang;
 use App\Http\Controllers\API\Admin\DataTransaksi;
 use App\Http\Controllers\API\Admin\UserController;
+use App\Http\Controllers\API\Admin\AppAdminController;
 
 
 
@@ -143,7 +144,7 @@ Route::group(['middleware' => 'jwt.auth'], function() {
         Route::get('/get_transaksi', [DataTransaksi::class, 'get_all_with_params']);
 
         // pengaturan app
-        Route::get('/get_app', [AppController::class, 'get_data']);
+        Route::get('/get_app', [AppAdminController::class, 'get_data']);
     });
 
 });
@@ -155,7 +156,7 @@ Route::prefix('/notification')->group(function () {
 
 //no auth route
 Route::prefix('/app')->group(function () {
-    Route::get('/get_app', [AppController::class, 'get_app']); //ini dikirim ke midtrans
+    Route::get('/get_app', [AppController::class, 'get_app']);
 });
 
 Route::prefix('/public')->group(function () {

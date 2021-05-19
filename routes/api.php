@@ -141,6 +141,9 @@ Route::group(['middleware' => 'jwt.auth'], function() {
 
         // lelang
         Route::get('/get_transaksi', [DataTransaksi::class, 'get_all_with_params']);
+
+        // pengaturan app
+        Route::get('/get_app', [AppController::class, 'get_data']);
     });
 
 });

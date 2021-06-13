@@ -5,11 +5,7 @@ use App\Http\Controllers\API\Admin\DataLelang;
 use App\Http\Controllers\API\Admin\DataTransaksi;
 use App\Http\Controllers\API\Admin\UserController;
 use App\Http\Controllers\API\Admin\AppAdminController;
-
-
-
-
-
+use App\Http\Controllers\API\Admin\DataKategori;
 use App\Http\Controllers\API\AppController;
 use App\Http\Controllers\API\Auth\LoginController;
 use App\Http\Controllers\API\Auth\NewSocialLoginController;
@@ -121,6 +117,12 @@ Route::group(['middleware' => 'jwt.auth'], function() {
 
 
 
+      //hit count
+    Route::post('hit/store',[HitController::class, 'store']);
+    Route::get('hit/get_hits',[HitController::class, 'get_hits']);
+
+
+
     Route::get('/auth/logout', [MeController::class, 'logout']);
 
 
@@ -146,6 +148,13 @@ Route::group(['middleware' => 'jwt.auth'], function() {
         // pengaturan app
         Route::get('/get_app', [AppAdminController::class, 'get_data']);
         Route::post('/update_app', [AppAdminController::class, 'update_data']);
+        Route::post('/update_icon', [AppAdminController::class, 'upload_image']);
+
+        //pengaturan kategori
+        Route::get('/get_all_kategories', [DataKategori::class, 'get_all']);
+        Route::post('/store_kategories', [DataKategori::class, 'add_data']);
+        Route::post('/remove_kategories', [DataKategori::class, 'remove_data']);
+        Route::post('/update_kategories', [DataKategori::class, 'update_data']);
     });
 
 });

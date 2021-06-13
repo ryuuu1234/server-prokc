@@ -23,7 +23,7 @@ class BroadcastMessage extends Controller
                             ->setClickAction($link);
 
         $dataBuilder = new PayloadDataBuilder();
-        $dataBuilder->addData(['sender' => $sender, 'message'=>$message]);
+        $dataBuilder->addData(['sender' => $sender, 'message'=>$message, 'click_action'=>$link]);
 
         $option = $optionBuilder->build();
         $notification = $notificationBuilder->build();

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\App;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 
@@ -44,6 +45,41 @@ class AppAdminController extends Controller
         if (!$update) {
             return response()->json(['message'=>'failed'], 500);
         }
-        return response()->json(['messaage'=>'success', 'result'=>$update]);
+        return response()->json(['messaage'=>'success', 'result'=>$app]);
    }
+
+   public function upload_image(Request $request)
+   {
+        $app = App::find(1);
+
+        $old_path = $app->icon;
+        Storage::delete('public/'.$old_path);
+        if($request->hasFile('image')) {
+            $request->validate([
+                'image'=>'required|image|mimes:jpeg,png,jpg'
+            ]);
+            $path = $request->file('image')->store('images', 'public');
+            
+            $save = $app->update([
+                'icon'=>$path,
+            ]);
+            
+        
+       
+            if ($save) {
+                return response()->json(['message'=>'success', 'result'=>$app],200);exit;
+            } else {
+                return response()->json([
+                    'message'       => 'Error on upload',
+                ],500);exit;
+            } 
+            
+        }
+        return response()->json([
+            'message'       => 'Error on Updated',
+        ],500);
+   }
+
+
+
 }

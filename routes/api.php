@@ -94,6 +94,7 @@ Route::group(['middleware' => 'jwt.auth'], function() {
     
     //bid
     Route::post('bid/store_bid',[BidController::class, 'store_bid']);
+    Route::get('bid/get-bid',[BidController::class, 'get_bid']);
     
     //Forum Chat
     Route::post('forum/add_message',[ForumController::class, 'add_message']);
@@ -107,6 +108,7 @@ Route::group(['middleware' => 'jwt.auth'], function() {
 });
 
 //no auth route
+Route::get('/public/get-bid',[BidController::class, 'get_bid']);
 Route::get('/public/get_all_params', [LelangController::class, 'get_all_params']);
 Route::prefix('/notification')->group(function () {
     Route::post('/post_to_midtrans', [NotificationController::class, 'post_to_midtrans']); //ini dikirim ke midtrans

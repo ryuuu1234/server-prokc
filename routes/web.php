@@ -3,6 +3,7 @@
 use App\Models\Kategori;
 use App\Models\Lelang;
 use App\Models\User;
+use App\Models\Bid;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
@@ -20,6 +21,10 @@ use Illuminate\Support\Str;
 */
 
 Route::get('/coba', function () {
+    $to=2;
+    $bid=Bid::where('user_id',$to)->get();
+
+    dd($bid);
     // $coba = Str::random(10);
     // $coba = Str::orderedUuid(10);
     // $coba = date('mdy');
@@ -28,10 +33,10 @@ Route::get('/coba', function () {
     //                 dd($coba);
     // $date = date('Y-m-d');
     // echo customTanggal($date,'d-m-Y');
-    $hasil = [];
-    $token = User::find(1)->fcm_token;
-    array_push($hasil, $token);
-    dd($hasil, $token);
+    // $hasil = [];
+    // $token = User::find(1)->fcm_token;
+    // array_push($hasil, $token);
+    // dd($hasil, $token);
 
     // $hasil = [];
     // $token = User::find(1)->fcm_token;
@@ -41,14 +46,18 @@ Route::get('/coba', function () {
     //     'id'=>1,
     // ];
 
-    $to = [1,2];
-    $user = Kategori::whereIn('id', $to)->get();   
+    // $to = [1,2];
+    // $user = User::whereIn('id', $to)->get();   
     // $topik = '{"type":"transaction","id":1}';
-    dd($user);
+    // dd($user);
 });
 
 // Route::get('/linkstorage', function () {
 //     Artisan::call('storage:link'); // this will do the command line job
+// });
+
+// Route::get('/bid', function () {
+    
 // });
 
 Route::get('/', function () {

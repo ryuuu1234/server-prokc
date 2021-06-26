@@ -34,6 +34,10 @@ class Lelang extends Model
     {
         return $this->hasOne(User::class, 'id', 'user_id');
     }
+    public function winner()
+    {
+        return $this->hasOne(User::class, 'id', 'winner_id');
+    }
 
 
 }

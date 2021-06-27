@@ -74,6 +74,7 @@ Route::group(['middleware' => 'jwt.auth'], function() {
     Route::get('/lelang/publish/{lelang}', [LelangController::class, 'publish']);
     Route::get('/lelang/get_all_params', [LelangController::class, 'get_all_params']);
     Route::get('/lelang/data_by/{lelang}', [LelangController::class, 'data_by']);
+    Route::post('/lelang/status', [LelangController::class, 'status_lelang']);
     
     // media lelang
     Route::delete('/media_lelang/remove/{id}', [MediaLelangController::class, 'hapus_image']);

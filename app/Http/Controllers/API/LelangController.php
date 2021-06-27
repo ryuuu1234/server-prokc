@@ -12,9 +12,9 @@ use App\Models\User;
 use App\Models\VideoLelang;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-// use Illuminate\Support\Facades\Storage;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Str;
+use Carbon\Carbon;
 
 class LelangController extends Controller
 {
@@ -53,6 +53,46 @@ class LelangController extends Controller
         $data = Lelang::where('user_id', $user_id)->orderBy('id', 'DESC')->first();
         $data->load('bid');
         return response()->json($data,200); 
+    }
+
+    public function status_lelang(Request $request){
+        $lelang = Lelang::find($request->id);
+        // $lelang = Lelang::find(1);
+        $now = strtotime(Carbon::now());
+        $berakhir= strtotime($lelang->berakhir);
+        $diff = $berakhir-$now;
+
+        if($lelang->status==1 && $diff<=0){
+            $bid=Bid::where('lelang_id',$lelang->id)->orderBy('created_at','DESC')->get();
+            $ada=count($bid);
+            if($ada>0){
+                $lelang->update(['winner_id'=>$bid[0]->user_id, 'status'=>3]);
+            }else{
+                $lelang->update(['status'=>2]);
+            }
+
+            return response()->json([
+                'data'=>$lelang,
+                'id'=>$lelang->id,
+                'now'=>$now,
+                'berakhir'=>$berakhir,
+                'diff'=>$diff,
+                'bid'=>$bid,
+                'ada'=>$ada,
+            ]);
+        }else{
+            return response()->json([
+                'data'=>$lelang,
+                'id'=>$lelang->id,
+                'now'=>$now,
+                'berakhir'=>$berakhir,
+                'diff'=>$diff,
+                
+            ]);
+
+        }
+
+
     }
 
     public function data_by($lelang_id)

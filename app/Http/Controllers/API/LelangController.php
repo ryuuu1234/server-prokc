@@ -163,6 +163,7 @@ class LelangController extends Controller
         $get->load('video_lelang:id,lelang_id,video,status');
         $get->load('bid.bidder');
         $get->load('hit');
+        $get->load('winner');
         if ($get) {
             return response()->json(['success'=> 'true', 'data'=>$get],200);
         } else {
